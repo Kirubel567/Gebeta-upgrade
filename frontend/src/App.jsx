@@ -1,10 +1,5 @@
-// src/App.jsx
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-
-// Layout
-import MainLayout from './layouts/MainLayout';
-
 // Pages
 import Home from './pages/Home/Home';
 import ReviewsDelivery from './pages/ReviewsDelivery/ReviewsDelivery';
@@ -49,9 +44,6 @@ const App = () => {
           <Route path="/submitReviews.html" element={<Navigate to="/submit-review" replace />} />
           <Route path="/about.html" element={<Navigate to="/about" replace />} />
           <Route path="/index.html" element={<Navigate to="/" replace />} />
-          
-          {/* 404 - Not Found */}
-          <Route path="*" element={<NotFound />} />
         </Routes>
       </MainLayout>
     </Router>
