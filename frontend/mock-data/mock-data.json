@@ -1,0 +1,132 @@
+{
+  "home": {
+    "featuredBusinesses": [
+      {
+        "id": "b1",
+        "name": "Student Center Cafeteria",
+        "category": "on-campus",
+        "description": "Central hub for student dining. Traditional & modern meals.",
+        "rating": 4.2,
+        "image": "https://images.unsplash.com/photo-1567529684892-09290a1b2d05",
+        "isFeatured": true
+      },
+      {
+        "id": "b2",
+        "name": "Yeshi's Coffee House",
+        "category": "off-campus",
+        "description": "Cozy spot for coffee and snacks",
+        "rating": 4.8,
+        "image": "https://images.unsplash.com/photo-1551024709-8f23befc6b7b",
+        "isFeatured": true
+      }
+    ],
+    "recentReviews": [
+      {
+        "id": "r1",
+        "user": { "name": "Abebe Kebede", "avatar": "https://i.pravatar.cc/150?img=1" },
+        "business": "Student Center Cafeteria",
+        "rating": 5,
+        "body": "Amazing food and friendly staff!"
+      },
+      {
+        "id": "r2",
+        "user": { "name": "Tigist Alemu", "avatar": "https://i.pravatar.cc/150?img=2" },
+        "business": "Yeshi's Coffee House",
+        "rating": 4,
+        "body": "Great coffee, a bit crowded at peak hours."
+      }
+    ]
+  },
+  "delivery": [
+    {
+      "id": "d1",
+      "name": "Campus Express Delivery",
+      "deliverySpeed": "fast",
+      "averageDeliveryTime": 25,
+      "deliveryFee": { "min": 15, "max": 30 },
+      "rating": 4.5,
+      "logo": "https://images.unsplash.com/photo-1523475496153-3e6b60e1b58b",
+      "servicedAreas": ["4k", "5k", "6k"]
+    },
+    {
+      "id": "d2",
+      "name": "QuickBite Delivery",
+      "deliverySpeed": "standard",
+      "averageDeliveryTime": 40,
+      "deliveryFee": { "min": 20, "max": 35 },
+      "rating": 4.0,
+      "logo": "https://images.unsplash.com/photo-1586190848861-99aa4a171e90",
+      "servicedAreas": ["5k", "6k"]
+    }
+  ],
+  "about": {
+    "title": "About Gebeta",
+    "description": "Gebeta is a campus-based food discovery platform designed to help AAU students find the best on-campus and off-campus food options. Our mission is to connect students with local eateries, reviews, and delivery services.",
+    "team": [
+      { "name": "Yeshi Tadesse", "role": "Founder & CEO", "avatar": "https://i.pravatar.cc/150?img=5" },
+      { "name": "Abebe Kebede", "role": "Lead Developer", "avatar": "https://i.pravatar.cc/150?img=6" },
+      { "name": "Tigist Alemu", "role": "UI/UX Designer", "avatar": "https://i.pravatar.cc/150?img=7" }
+    ],
+    "stats": [
+      { "label": "Businesses Listed", "value": 120 },
+      { "label": "Reviews Submitted", "value": 450 },
+      { "label": "Delivery Partners", "value": 15 }
+    ]
+  },
+  "businesses": [
+    {
+      "id": "b1",
+      "name": "Student Center Cafeteria",
+      "category": "on-campus",
+      "description": "Central hub for student dining. Traditional & modern meals.",
+      "rating": 4.2,
+      "image": "https://images.unsplash.com/photo-1567529684892-09290a1b2d05",
+      "reviews": [
+        { "user": "Abebe Kebede", "rating": 5, "body": "Amazing food!" },
+        { "user": "Selamawit", "rating": 4, "body": "Good variety of meals." }
+      ],
+      "location": "Main Campus",
+      "menu": [
+        { "name": "Spaghetti", "price": 50 },
+        { "name": "Injera Combo", "price": 70 }
+      ]
+    },
+    {
+      "id": "b2",
+      "name": "Yeshi's Coffee House",
+      "category": "off-campus",
+      "description": "Cozy spot for coffee and snacks",
+      "rating": 4.8,
+      "image": "https://images.unsplash.com/photo-1551024709-8f23befc6b7b",
+      "reviews": [
+        { "user": "Tigist Alemu", "rating": 4, "body": "Nice coffee!" },
+        { "user": "Daniel", "rating": 5, "body": "Best cappuccino in town." }
+      ],
+      "location": "Bole",
+      "menu": [
+        { "name": "Cappuccino", "price": 30 },
+        { "name": "Latte", "price": 35 }
+      ]
+    }
+  ],
+  "users": [
+    { "id": "u1", "name": "Abebe Kebede", "email": "abebe@example.com", "token": "mock-jwt-1" },
+    { "id": "u2", "name": "Tigist Alemu", "email": "tigist@example.com", "token": "mock-jwt-2" }
+  ],
+  "reviews": [
+    {
+      "id": "r1",
+      "user": "Abebe Kebede",
+      "businessId": "b1",
+      "rating": 5,
+      "body": "Amazing food!"
+    },
+    {
+      "id": "r2",
+      "user": "Tigist Alemu",
+      "businessId": "b2",
+      "rating": 4,
+      "body": "Great coffee, a bit crowded at peak hours."
+    }
+  ]
+}
