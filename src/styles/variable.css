@@ -1,0 +1,20 @@
+:root {
+    /* Colors */
+    --primary-bg: #050A30;       
+    --secondary-bg: #252953;     
+    --accent-green: #39FF14;     
+    --text-white: #ffffff;
+    --text-grey: #cccccc;
+    
+    /* Fonts */
+    --font-main: 'Poppins', sans-serif;
+    --font-heading: 'Poppins', sans-serif;
+    --font-script: 'Pacifico', cursive;
+    --font-desc: 'Roboto', sans-serif;
+    
+    /* Spacing & Sizing */
+    --border-radius-btn: 54px;
+    --border-radius-card: 12px;
+    --container-width: 1200px;
+    --section-padding: 60px 5%;
+}
