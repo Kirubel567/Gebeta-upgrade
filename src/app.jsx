@@ -4,10 +4,10 @@ import Footer from './components/footer/footer';
 
 // Import pages
 import Home from './pages/Home/Home';
-import About from './pages/about/About';
-import Delivery from './pages/delivery/Delivery';
+import About from './pages/About/About';
+import Delivery from './pages/Delivery/Delivery';
 import Reviews from './pages/Reviews/Reviews';
-import CustomerReview from './pages/customerReview/CustomerReview';
+import CustomerReview from './pages/CustomerReview/CustomerReview';
 import SubmitReview from './pages/SubmitReview/SubmitReview';
 
 function App() {
