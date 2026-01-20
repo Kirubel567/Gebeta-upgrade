@@ -84,16 +84,20 @@ const BusinessSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
-    menu: [
-      {
-        itemName: String,
-        price: Number,
-        isPopular: Boolean,
-      },
-    ],
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  },
 );
+
+// This creates the link to the MenuItem model
+BusinessSchema.virtual("menuItems", {
+  ref: "MenuItem",
+  localField: "_id",
+  foreignField: "business",
+});
 
 BusinessSchema.index({ category: 1, "rating.average": -1 });
 BusinessSchema.index({ name: "text", description: "text" });
