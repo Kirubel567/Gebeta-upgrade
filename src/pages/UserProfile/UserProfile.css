@@ -184,7 +184,9 @@
   border-radius: var(--border-radius-card);
   overflow: hidden;
   border: 1px solid rgba(57, 255, 20, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
   height: 450px; /* Fixed height for uniform boxes */
   display: flex;
   flex-direction: column;
@@ -326,10 +328,6 @@
   line-height: 1.6;
 }
 
-.no-reviews .btn {
-  margin-top: 20px;
-}
-
 /* Loading State */
 .loading-profile {
   display: flex;
@@ -350,8 +348,12 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 /* User Stats with Icons */
 .profile-stats-vertical {
@@ -632,7 +634,7 @@
   .reviews-grid {
     gap: 20px;
   }
-  
+
   .review-box {
     height: 420px;
   }
@@ -643,21 +645,21 @@
     flex-direction: column;
     gap: 30px;
   }
-  
+
   .profile-left-column,
   .profile-right-column {
     flex: 1;
     max-width: 100%;
   }
-  
+
   .profile-card {
     position: static;
   }
-  
+
   .reviews-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .review-box {
     height: 400px;
   }
@@ -669,39 +671,39 @@
     align-items: center;
     text-align: center;
   }
-  
+
   .profile-name-location {
     text-align: center;
   }
-  
+
   .edit-actions {
     flex-direction: column;
   }
-  
+
   .stat-line {
     flex-direction: column;
     align-items: flex-start;
     gap: 5px;
   }
-  
+
   .stat-value {
     align-self: flex-end;
   }
-  
+
   .avatar-upload-container {
     flex-direction: column;
   }
-  
+
   .avatar-preview {
     width: 100px;
     height: 100px;
   }
-  
+
   .upload-button {
     padding: 10px 20px;
     font-size: 0.9rem;
   }
-  
+
   .review-box {
     height: 380px;
   }
@@ -711,24 +713,24 @@
   .profile-card {
     padding: 20px;
   }
-  
+
   .recent-reviews-section {
     padding: 20px;
   }
-  
+
   .profile-avatar {
     width: 80px;
     height: 80px;
   }
-  
+
   .profile-name {
     font-size: 1.5rem;
   }
-  
+
   .review-box {
     height: 350px;
   }
-  
+
   .food-name {
     font-size: 1.2rem;
   }

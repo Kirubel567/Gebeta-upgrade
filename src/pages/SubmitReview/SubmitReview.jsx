@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
+import Button from '../../components/Button/Button';
 import './SubmitReview.css';
 
 const SubmitReview = () => {
@@ -344,11 +345,11 @@ const SubmitReview = () => {
             </div>
           )}
 
-          <button 
-            className="btn btn-primary" 
-            style={{ width: '100%', marginTop: '20px' }}
-            onClick={handleSubmitReview}
+          <Button 
+            variant="primary" 
+            size="large"
             disabled={submitting || !rating || !reviewText.trim()}
+            onClick={handleSubmitReview}
           >
             {submitting ? (
               <>
@@ -358,7 +359,7 @@ const SubmitReview = () => {
             ) : (
               'Post'
             )}
-          </button>
+          </Button>
 
         </div>
 
@@ -401,13 +402,9 @@ const SubmitReview = () => {
                 </p>
                 {review.body.length > 150 && (
                   <Link to={`/customer-review`} state={{ business: businessData }}>
-                    <button className="btn btn-outline" style={{ 
-                      fontSize: '0.8rem', 
-                      padding: '5px 15px', 
-                      marginTop: '10px' 
-                    }}>
+                    <Button variant="outline" size="small">
                       READ MORE
-                    </button>
+                    </Button>
                   </Link>
                 )}
               </div>
@@ -421,9 +418,9 @@ const SubmitReview = () => {
           {/* View All Reviews Button */}
           <div style={{ textAlign: 'center', marginTop: '20px' }}>
             <Link to={`/customer-review`} state={{ business: businessData }}>
-              <button className="btn btn-outline">
+              <Button variant="outline">
                 View All Reviews
-              </button>
+              </Button>
             </Link>
           </div>
         </div>

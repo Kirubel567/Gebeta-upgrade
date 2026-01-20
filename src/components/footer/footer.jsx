@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Button from '../Button/Button';
 import './Footer.css';
 
 const Footer = () => {
@@ -31,9 +32,9 @@ const Footer = () => {
             Submit Your Details And Get Featured On Our Platform.
           </p>
           <Link to="/application">
-            <button className="footer-btn script-font">
+            <Button variant="primary" className="script-font">
               Submit Application
-            </button>
+            </Button>
           </Link>
         </div>
 
