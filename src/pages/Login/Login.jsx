@@ -1,6 +1,7 @@
 // src/pages/Login/Login.jsx
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import Button from '../../components/Button/Button';
 import BASE_URL from '../../api/client';
 import './Login.css';
 
@@ -160,12 +161,9 @@ const Login = () => {
                 </div>
 
                 {/* Login Button */}
-                <button
-                  type="submit"
-                  className="login-button"
-                >
+                <Button variant="primary" type="submit" size="large">
                   Sign In to Gebeta
-                </button>
+                </Button>
               </form>
 
               {/* Divider */}
@@ -176,10 +174,11 @@ const Login = () => {
 
               {/* Social Login */}
               <div className="social-login">
-                <button
+                <Button
                   type="button"
-                  className="social-button google-button"
+                  variant="secondary"
                   onClick={handleGoogleLogin}
+                  className="google-button"
                 >
                   <svg className="social-icon" viewBox="0 0 24 24">
                     <path
@@ -188,10 +187,11 @@ const Login = () => {
                     ></path>
                   </svg>
                   <span className="social-text">Google</span>
-                </button>
-                <button
+                </Button>
+                <Button
                   type="button"
-                  className="social-button facebook-button"
+                  variant="secondary"
+                  className="facebook-button"
                 >
                   <svg className="social-icon" viewBox="0 0 24 24">
                     <path
@@ -200,7 +200,7 @@ const Login = () => {
                     ></path>
                   </svg>
                   <span className="social-text">Facebook</span>
-                </button>
+                </Button>
               </div>
             </div>
 

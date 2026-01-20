@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import Button from '../../components/Button/Button';
 import './UserProfile.css';
 
 const UserProfile = () => {
@@ -492,20 +493,14 @@ const UserProfile = () => {
 
                 {/* Edit Actions */}
                 <div className="edit-actions">
-                  <button 
-                    className="btn btn-primary save-btn"
-                    onClick={handleSaveChanges}
-                  >
+                  <Button variant="primary" onClick={handleSaveChanges}>
                     <i className="fa-solid fa-check"></i>
                     Save Changes
-                  </button>
-                  <button 
-                    className="btn btn-outline cancel-btn"
-                    onClick={handleCancelEdit}
-                  >
+                  </Button>
+                  <Button variant="outline" onClick={handleCancelEdit}>
                     <i className="fa-solid fa-times"></i>
                     Cancel
-                  </button>
+                  </Button>
                 </div>
               </div>
             ) : (
@@ -555,13 +550,10 @@ const UserProfile = () => {
                 </div>
                 
                 {/* Edit Profile Button */}
-                <button 
-                  className="btn btn-primary edit-profile-btn"
-                  onClick={handleEditProfile}
-                >
+                <Button variant="primary" onClick={handleEditProfile}>
                   <i className="fa-solid fa-pen-to-square"></i>
                   Edit Profile
-                </button>
+                </Button>
               </>
             )}
           </div>
@@ -615,12 +607,9 @@ const UserProfile = () => {
                 {/* Load More Button */}
                 {hasMoreReviews && (
                   <div className="load-more-container">
-                    <button 
-                      className="btn btn-outline load-more-btn"
-                      onClick={handleLoadMore}
-                    >
+                    <Button variant="outline" onClick={handleLoadMore}>
                       Load More Reviews
-                    </button>
+                    </Button>
                   </div>
                 )}
               </>

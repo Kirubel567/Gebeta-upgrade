@@ -6,6 +6,14 @@
     --text-white: #ffffff;
     --text-grey: #cccccc;
     
+    /* Button Colors */
+    --color-primary: #39FF14;
+    --color-secondary: #252953;
+    --color-success: #39FF14;
+    --color-danger: #ff4444;
+    --color-warning: #ffaa00;
+    --color-neutral: #cccccc;
+    
     /* Fonts */
     --font-main: 'Poppins', sans-serif;
     --font-heading: 'Poppins', sans-serif;

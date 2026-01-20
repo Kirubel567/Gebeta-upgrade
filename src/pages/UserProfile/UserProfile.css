@@ -326,10 +326,6 @@
   line-height: 1.6;
 }
 
-.no-reviews .btn {
-  margin-top: 20px;
-}
-
 /* Loading State */
 .loading-profile {
   display: flex;

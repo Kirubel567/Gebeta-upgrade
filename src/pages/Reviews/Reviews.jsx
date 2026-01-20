@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import Button from '../../components/Button/Button';
 import './Reviews.css';
 
 const Reviews = () => {
@@ -385,9 +386,9 @@ const Reviews = () => {
             </div>
           </div>
           <Link to="/customer-review" state={{ business: business }}>
-            <button className="btn btn-primary" style={{ fontSize: '1rem', padding: '10px 25px' }}>
+            <Button variant="primary" size="medium">
               Read Reviews
-            </button>
+            </Button>
           </Link>
         </div>
       </div>
@@ -524,13 +525,13 @@ const Reviews = () => {
                 autoFocus
               />
               {searchQuery && (
-                <button className="clear-search-btn" onClick={handleClearSearch}>
+                <Button variant="neutral" size="small" onClick={handleClearSearch} className="clear-search-btn">
                   <i className="fa-solid fa-times"></i>
-                </button>
+                </Button>
               )}
-              <button className="search-action-btn" onClick={handleSearch}>
+              <Button variant="primary" size="medium" onClick={handleSearch} className="search-action-btn">
                 <i className="fa-solid fa-magnifying-glass"></i>
-              </button>
+              </Button>
             </div>
             {loading && (
               <div className="search-loading">

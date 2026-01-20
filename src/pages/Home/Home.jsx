@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import Button from '../../components/Button/Button';
 import './Home.css';
 
 const Home = () => {
@@ -204,10 +205,10 @@ const Home = () => {
     </p>
     <div style={{ display: 'flex', gap: '20px' }}>
   <Link to="/reviews">
-    <button className="btn btn-primary">Explore</button>
+    <Button variant="primary">Explore</Button>
   </Link>
   <Link to="/submit-review">
-    <button className="btn btn-outline">Rate</button>
+    <Button variant="outline">Rate</Button>
   </Link>
 </div>
   </div>
@@ -280,7 +281,7 @@ const Home = () => {
                   <p className="review-author">
                     {review.rating} • {review.author}
                   </p>
-                  <button className="btn btn-outline">See More</button>
+                  <Button variant="outline">See More</Button>
                 </div>
               );
             })}
