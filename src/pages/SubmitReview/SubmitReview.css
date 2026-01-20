@@ -1,4 +1,64 @@
-/* SubmitReview.css */
+.btn {
+    display: inline-block;
+    padding: 12px 32px;
+    border-radius: var(--border-radius-btn);
+    font-family: var(--font-script);
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    width: 250px;
+}
+
+.btn-primary {
+    background-color: var(--accent-green);
+    color: var(--text-white); 
+    border: 2px solid var(--accent-green);
+}
+
+.btn-primary:hover {
+    background-color: #32e00e;
+    transform: scale(1.05);
+}
+
+.btn-outline {
+    background-color: transparent;
+    color: var(--accent-green);
+    border: 2px solid var(--accent-green);
+    font-size: 0.8rem; 
+    padding: 5px 15px; 
+    margin-top: 10px;
+}
+
+.btn-outline:hover {
+    background-color: var(--accent-green);
+    color: var(--secondary-bg);
+}
+.container {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.text-green { color: var(--accent-green); }
+.script-font { font-family: var(--font-script); }
+
+.section-title {
+    font-family: var(--font-heading);
+    font-size: 2.5rem; /* Unified size */
+    font-weight: 800;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    color: var(--text-white);
+}
+
+.divider {
+    border: 0;
+    height: 2px;
+    background-color: var(--text-white);
+    margin: 45px;
+}
+/* Reviews.css */
 .loading-container, .error-container {
     display: flex;
     flex-direction: column;
@@ -27,26 +87,48 @@
     margin-bottom: 20px;
 }
 
-/* Submit Review Container */
+/* Container */
+.container {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Section Title */
+.section-title {
+    font-family: var(--font-heading);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    color: var(--text-white);
+}
+
+.section-title:first-child {
+    font-size: 2.5rem;
+}
+
+/* Divider */
+.divider {
+    border: none;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent-green), transparent);
+    margin: 20px 0 30px 0;
+}
+
 .submit-review-container {
     display: flex;
     gap: 40px;
     padding: 60px 5%;
     max-width: var(--container-width);
     margin: 0 auto;
-    min-height: calc(100vh - 200px);
 }
 
-/* Submit Form Area */
 .submit-form-area {
     flex: 1;
     background-color: var(--secondary-bg);
     padding: 40px;
     border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
-/* Recent Reviews Area */
 .recent-reviews-area {
     flex: 1;
     background-color: var(--secondary-bg);
@@ -54,28 +136,8 @@
     border-radius: 20px;
     max-height: 800px;
     overflow-y: auto;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
-.recent-reviews-area::-webkit-scrollbar {
-    width: 8px;
-}
-
-.recent-reviews-area::-webkit-scrollbar-track {
-    background: var(--secondary-bg);
-    border-radius: 4px;
-}
-
-.recent-reviews-area::-webkit-scrollbar-thumb {
-    background: var(--accent-green);
-    border-radius: 4px;
-}
-
-.recent-reviews-area::-webkit-scrollbar-thumb:hover {
-    background: #6ECB63;
-}
-
-/* Place Info */
 .place-info {
     display: flex;
     align-items: center;
@@ -88,225 +150,104 @@
     height: 80px;
     border-radius: 10px;
     object-fit: cover;
-    border: 2px solid var(--accent-green);
 }
 
-.cafeteriaDescription h3 {
-    font-family: var(--font-heading);
-    font-size: 1.5rem;
-    margin-bottom: 5px;
-}
-
-/* Divider */
-.divider {
-    border: none;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--accent-green), transparent);
-    margin: 20px 0 30px 0;
-}
-
-/* Rating Select */
 .rating-select {
     display: flex;
-    align-items: center;
     gap: 10px;
-    font-size: 2rem;
+    font-size: 1.5rem;
     color: var(--text-grey);
-    margin: 20px 0 30px 0;
-}
-
-.rating-select i {
+    margin: 20px 0;
     cursor: pointer;
-    transition: all 0.2s ease;
 }
 
-.rating-select i:hover {
-    transform: scale(1.2);
-    color: var(--accent-green) !important;
-}
-
-.rating-select i.fa-solid {
+.rating-select i:hover, .rating-select i.active {
     color: var(--accent-green);
 }
-
-.rating-select span {
-    font-size: 1rem;
-    margin-left: 15px;
-    color: var(--text-grey);
-    font-weight: 500;
-}
-
-/* Form Group */
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-group textarea {
-    width: 100%;
-    padding: 15px;
-    background-color: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    color: var(--text-white);
-    font-family: var(--font-body);
-    font-size: 1rem;
-    resize: vertical;
-    min-height: 150px;
-    transition: border-color 0.3s;
-}
-
-.form-group textarea:focus {
-    outline: none;
-    border-color: var(--accent-green);
-}
-
-.form-group textarea::placeholder {
-    color: var(--text-grey);
-}
-
-/* Review Item */
-.review-item {
-    background-color: rgba(255, 255, 255, 0.05);
-    padding: 20px;
-    border-radius: 15px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    margin-bottom: 20px;
-}
-
-.review-header {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 15px;
-}
-
-.reviewer-img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid var(--accent-green);
-}
-
-.reviewer-info h4 {
-    font-family: var(--font-heading);
-    font-size: 1rem;
-    text-transform: uppercase;
-    margin-bottom: 5px;
-}
-
-.reviewer-info p {
-    font-size: 0.8rem;
-    color: var(--text-grey);
-    margin-bottom: 5px;
-}
-
-.review-body {
-    font-size: 0.9rem;
-    color: var(--text-grey);
-    font-style: italic;
-    line-height: 1.5;
-    margin-bottom: 10px;
-}
-
-/* Buttons */
-.btn {
-    padding: 12px 30px;
-    border-radius: 30px;
-    font-family: var(--font-heading);
-    font-weight: 800;
-    text-transform: uppercase;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 0.9rem;
-    letter-spacing: 0.5px;
-}
-
-.btn-primary {
-    background-color: var(--accent-green);
-    color: var(--primary-bg);
-}
-
-.btn-primary:hover:not(:disabled) {
-    background-color: #6ECB63;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(110, 203, 99, 0.3);
-}
-
-.btn-primary:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-.btn-outline {
-    background-color: transparent;
-    color: var(--accent-green);
-    border: 2px solid var(--accent-green);
-}
-
-.btn-outline:hover {
-    background-color: var(--accent-green);
-    color: var(--primary-bg);
-}
-
-/* Error Message */
-.error-message {
-    background-color: rgba(255, 107, 107, 0.1);
-    border: 1px solid rgba(255, 107, 107, 0.3);
-    color: #ff6b6b;
-    padding: 10px 15px;
-    border-radius: 5px;
-    margin-top: 15px;
-    font-size: 0.9rem;
-}
-
-/* Responsive */
 @media (max-width: 1024px) {
-    .submit-review-container {
-        flex-direction: column;
-        padding: 40px 20px;
-    }
-    
-    .submit-form-area,
-    .recent-reviews-area {
-        width: 100%;
-    }
-    
-    .recent-reviews-area {
-        max-height: 500px;
-    }
+  .hero-section {
+    flex-direction: column;
+    text-align: center;
+    padding-top: 40px;
+  }
+
+  .hero-buttons {
+    justify-content: center;
+  }
+
+  .hero-description {
+    margin: 0 auto 40px auto;
+  }
+
+  .about-section {
+    flex-direction: column;
+  }
+
+  .submit-review-container {
+    flex-direction: column;
+  }
 }
 
 @media (max-width: 768px) {
-    .place-info {
-        flex-direction: column;
-        text-align: center;
+    .hero-buttons{
+        display: flex; 
+        flex-direction: column; 
+        gap: 15px;
+        align-items: center;  
     }
-    
-    .place-info img {
-        width: 120px;
-        height: 120px;
-    }
-    
-    .rating-select {
-        font-size: 1.8rem;
-        justify-content: center;
-        flex-wrap: wrap;
-    }
-    
-    .submit-form-area,
-    .recent-reviews-area {
-        padding: 30px;
-    }
-}
 
-@media (max-width: 480px) {
-    .rating-select {
-        font-size: 1.5rem;
-    }
-    
-    .cafeteriaDescription h3 {
-        font-size: 1.2rem;
-    }
+  .businesses-grid {
+    grid-template-columns: 1fr !important;
+    grid-auto-rows: auto;
+  
+    padding: 0 15px;       
+    margin: 0 auto;        
+    justify-content: center; 
+  }
+
+  .businesses-grid > :nth-child(5),
+  .businesses-grid > .special,
+  .businesses-grid > :nth-child(6) {
+    grid-column: auto !important;
+  }
+  .about-gallery {
+    display: none;
+  }
+  .section-title {
+    font-size: 2rem;
+  }
+
+  .hero-title {
+    font-size: 2.5rem;
+  }
+
+  .hero-grid {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .main-card {
+    flex-direction: column;
+  }
+
+  .main-card-image {
+    height: 200px;
+  }
+
+  .peek-card {
+    height: 200px;
+  }
+
+  .reviews-list {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-container {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .social-col {
+    justify-content: center;
+  }
 }
