@@ -5,7 +5,7 @@ import './Reviews.css';
 const Reviews = () => {
   const [activeFilter, setActiveFilter] = useState('on-campus');
 
-  // MOCK DATA - Exact from your HTML
+  // MOCK DATA - Enhanced with more details for CustomerReview page
   const mockData = {
     onCampus: {
       business: {
@@ -17,7 +17,13 @@ const Reviews = () => {
         reviews: 234,
         location: '5K DORMITORY',
         groupFriendly: true,
-        hours: '6pm'
+        hours: '6pm',
+        category: 'On-Campus',
+        description: 'The main cafeteria serving students with a variety of meals throughout the day.',
+        menuItems: ['Pizza', 'Pasta', 'Salads', 'Burgers', 'Daily Specials'],
+        priceRange: '$',
+        phone: '(123) 456-7890',
+        website: 'https://university.edu/cafeteria'
       }
     },
     delivery: {
@@ -30,7 +36,13 @@ const Reviews = () => {
         reviews: 280,
         location: '5K, 4K, 6K DORMITORY',
         groupFriendly: false,
-        hours: '8pm'
+        hours: '8pm',
+        category: 'Delivery',
+        description: 'Fast food delivery service covering all dormitories on campus.',
+        menuItems: ['Burgers', 'Fries', 'Wings', 'Pizza', 'Soft Drinks'],
+        priceRange: '$$',
+        phone: '(123) 456-7891',
+        website: 'https://arrivedelivery.com'
       }
     },
     offCampus: {
@@ -43,7 +55,13 @@ const Reviews = () => {
         reviews: 234,
         location: 'Infront of 5K DORMITORY Main GATE',
         groupFriendly: true,
-        hours: '6pm'
+        hours: '6pm',
+        category: 'Off-Campus',
+        description: 'Cozy cafe near campus with great coffee and snacks.',
+        menuItems: ['Coffee', 'Tea', 'Pastries', 'Sandwiches', 'Desserts'],
+        priceRange: '$$',
+        phone: '(123) 456-7892',
+        website: 'https://oasiscafe.com'
       }
     }
   };
@@ -95,7 +113,10 @@ const Reviews = () => {
             </div>
           </div>
           {/* LINK TO CUSTOMER REVIEW PAGE */}
-          <Link to={`/business/${business.id}`}>
+          <Link 
+            to="/customer-review" 
+            state={{ business: business }} // Pass business data via state
+          >
             <button className="btn btn-primary" style={{ fontSize: '1rem', padding: '10px 25px' }}>
               Read Reviews
             </button>
@@ -108,7 +129,10 @@ const Reviews = () => {
   const renderPeekCard = (business) => (
     <div className="peek-card">
       {/* LINK TO CUSTOMER REVIEW PAGE */}
-      <Link to={`/business/${business.id}`}>
+      <Link 
+        to="/customer-review" 
+        state={{ business: business }}
+      >
         <div 
           className="peek-image"
           style={{ backgroundImage: `url('${business.peekImage}')` }}
