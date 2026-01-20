@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema(
     },
 
     //university info
-    univeristy: {
+    university: {
       type: String,
       default: "AAU",
     },
