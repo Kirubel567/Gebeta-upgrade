@@ -1,6 +1,7 @@
 // src/pages/Login/Login.jsx
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import BASE_URL from '../../api/client';
 import './Login.css';
 
 const Login = () => {
@@ -9,10 +10,48 @@ const Login = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = (e) => {
+  const navigate = useNavigate();
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Login attempt:', { email, password, rememberMe });
-    // Add your login logic here
+    setError('');
+
+    try {
+      const response = await fetch(`${BASE_URL}/users`);
+      const users = await response.json();
+
+      const user = users.find(u => u.email === email);
+
+      if (user) {
+        // In a real app, we would validate password here using bcrypt or similar
+        // For this mock implementation, we'll accept any password if the user exists
+        console.log('Login successful:', user);
+        // You might want to store user info in context or local storage here
+        localStorage.setItem('user', JSON.stringify(user));
+        navigate('/');
+      } else {
+        setError('Invalid email or password');
+      }
+    } catch (err) {
+      console.error('Login error:', err);
+      setError('Something went wrong. Please try again.');
+    }
+  };
+
+  const handleGoogleLogin = () => {
+    // Mock Google Login
+    const mockGoogleUser = {
+      id: "google-123",
+      email: "google-user@gmail.com",
+      name: "Google User",
+      avatar: "https://lh3.googleusercontent.com/a/default-user=s96-c",
+      role: "user"
+    };
+
+    console.log('Google Login successful:', mockGoogleUser);
+    localStorage.setItem('user', JSON.stringify(mockGoogleUser));
+    navigate('/');
   };
 
   return (
@@ -20,7 +59,7 @@ const Login = () => {
       <div className="login-container">
         {/* Left Side: Hero Image */}
         <div className="login-hero">
-          <div 
+          <div
             className="hero-image"
             style={{
               backgroundImage: 'url("https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80")'
@@ -55,6 +94,7 @@ const Login = () => {
               <div className="form-header">
                 <h2 className="form-title">Sign In</h2>
                 <p className="form-subtitle">Welcome back! Please enter your details.</p>
+                {error && <div className="error-message" style={{ color: 'red', marginTop: '10px', textAlign: 'center' }}>{error}</div>}
               </div>
 
               <form className="login-form" onSubmit={handleSubmit}>
@@ -77,8 +117,8 @@ const Login = () => {
                 <div className="form-group">
                   <div className="label-row">
                     <label className="form-label">Password</label>
-                    <Link 
-                      to="/forgot-password" 
+                    <Link
+                      to="/forgot-password"
                       className="forgot-link"
                     >
                       Forgot Password?
@@ -139,6 +179,7 @@ const Login = () => {
                 <button
                   type="button"
                   className="social-button google-button"
+                  onClick={handleGoogleLogin}
                 >
                   <svg className="social-icon" viewBox="0 0 24 24">
                     <path
