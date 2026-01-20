@@ -166,7 +166,7 @@ const Home = () => {
     alignItems: 'center'
   }}>
     <img 
-      src="https://plus.unsplash.com/premium_photo-1695297516798-d275bdf26575?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3MjAxN3wwfDF8c2VhcmNofDV8fGV0aGlvcGlhbiUyMGZvb2R8ZW58MHx8fHwxNzY4OTA0NTk3fDA&ixlib=rb-4.1.0&q=85&q=85&fmt=jpg&crop=entropy&cs=tinysrgb&w=450" 
+      src="https://plus.unsplash.com/premium_photo-1676738356307-bc7d58a914a5?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHx2aXN1YWwtc2VhcmNofDF8fHxlbnwwfHx8fHw%3D" 
       alt="Delicious campus food"
       style={{
         width: '100%',
