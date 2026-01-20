@@ -11,87 +11,146 @@ const MenuItemDetail = () => {
   const [loading, setLoading] = useState(true);
   const [currentItemIndex, setCurrentItemIndex] = useState(0);
   const [foodReviews, setFoodReviews] = useState([]);
+  const [allData, setAllData] = useState(null);
 
-  // Fetch menu items from API
+  // Fetch all data from db.json
   useEffect(() => {
-    const fetchMenuItems = async () => {
+    const fetchData = async () => {
       try {
         setLoading(true);
+        const response = await fetch('/db.json');
+        const data = await response.json();
+        setAllData(data);
         
+        // Get menu items for the business
+        let menuItems = [];
         if (business && business.id) {
-          // API Endpoint: GET /api/menu/:businessId
-          const response = await fetch(`/api/menu/${business.id}`);
+          // Filter menu items by business ID
+          menuItems = data.menu.filter(item => item.businessId === business.id);
           
-          if (response.ok) {
-            const data = await response.json();
-            if (data.success) {
-              setAllMenuItems(data.data);
-              
-              // Find the current item index
-              if (menuItem && menuItem.id) {
-                const foundIndex = data.data.findIndex(item => item.id === menuItem.id);
-                if (foundIndex !== -1) {
-                  setCurrentItemIndex(foundIndex);
-                }
-              }
-            } else {
-              throw new Error('API returned unsuccessful response');
-            }
-          } else {
-            // API failed, use mock data
-            console.log('API call failed, using mock data');
-            setAllMenuItems(mockMenuItems);
-            
-            if (menuItem && menuItem.id) {
-              const foundIndex = mockMenuItems.findIndex(item => item.id === menuItem.id);
-              if (foundIndex !== -1) {
-                setCurrentItemIndex(foundIndex);
-              }
+          // Format menu items with images
+          const formattedMenuItems = menuItems.map(item => ({
+            id: item.id,
+            itemName: item.itemName,
+            description: item.description,
+            price: item.price,
+            currency: item.currency,
+            category: item.category,
+            image: getMenuItemImage(item.id), // Helper function for images
+            rating: 4.5, // Default rating
+            isPopular: item.isPopular,
+            isAvailable: item.isAvailable
+          }));
+          
+          setAllMenuItems(formattedMenuItems);
+          
+          // Find the current item index
+          if (menuItem && menuItem.id) {
+            const foundIndex = formattedMenuItems.findIndex(item => item.id === menuItem.id);
+            if (foundIndex !== -1) {
+              setCurrentItemIndex(foundIndex);
             }
           }
         } else {
           // No business ID, use mock data
+          console.log('No business ID, using mock menu items');
           setAllMenuItems(mockMenuItems);
         }
       } catch (error) {
-        console.error('Error fetching menu items:', error);
+        console.error('Error fetching data:', error);
+        // Fallback to mock data
         setAllMenuItems(mockMenuItems);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchMenuItems();
+    fetchData();
   }, [business, menuItem]);
+
+  // Helper function to get menu item images
+  const getMenuItemImage = (itemId) => {
+    const imageMap = {
+      'm1': 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=800&auto=format&fit=crop', // Special Coffee
+      'm2': 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=800&auto=format&fit=crop', // Club Sandwich
+      'm3': 'https://images.unsplash.com/photo-1563379926898-05f4575a45d8?q=80&w=1000&auto=format&fit=crop', // Fruit Juice
+      'm4': 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=800&auto=format&fit=crop', // Cheese Burger
+      'm5': 'https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=800&auto=format&fit=crop', // French Fries
+      'default': 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=800&auto=format&fit=crop'
+    };
+    
+    return imageMap[itemId] || imageMap.default;
+  };
 
   // Fetch reviews for current menu item
   useEffect(() => {
-    const fetchItemReviews = async () => {
+    const fetchItemReviews = () => {
       if (!allMenuItems.length) return;
 
       const currentItem = allMenuItems[currentItemIndex];
       
       try {
-        // For now, we'll use mock reviews per item
-        // In a real app, you would fetch: GET /api/reviews/menu/:itemId
-        const mockItemReviews = itemReviewsData[currentItem.id] || [
-          {
-            id: 'default',
-            user: {
-              name: 'CUSTOMER',
-              university: 'AAU',
-              avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=400&auto=format&fit=crop'
-            },
-            rating: 4,
-            body: 'This dish is delicious! Great flavor and good portion size.',
-            createdAt: new Date().toISOString()
-          }
-        ];
+        // Get reviews from db.json that might be related to this item
+        // Note: In your db.json, reviews are for businesses, not specific menu items
+        // So we'll use mock reviews for demonstration
         
-        setFoodReviews(mockItemReviews);
+        // Get some general reviews for the business this item belongs to
+        let businessReviews = [];
+        if (allData && currentItem) {
+          // Find the business for this menu item
+          const menuItemFromData = allData.menu.find(item => item.id === currentItem.id);
+          if (menuItemFromData) {
+            businessReviews = allData.reviews
+              .filter(review => review.businessId === menuItemFromData.businessId)
+              .slice(0, 2); // Take max 2 reviews
+          }
+        }
+        
+        // Format reviews with user info
+        const formattedReviews = businessReviews.map((review, index) => {
+          const user = allData?.users?.find(u => u.id === review.userId) || {
+            name: 'CUSTOMER',
+            avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=400&auto=format&fit=crop',
+            university: 'AAU'
+          };
+          
+          // Create a review that mentions the current menu item
+          const itemSpecificReview = {
+            ...review,
+            user: {
+              name: user.name,
+              avatar: user.avatar,
+              university: `${user.dormitory || ''}, ${user.university || 'AAU'}`
+            },
+            body: generateItemSpecificReview(currentItem.itemName, review.body)
+          };
+          
+          return itemSpecificReview;
+        });
+
+        // If no reviews from db.json, use mock reviews
+        if (formattedReviews.length === 0) {
+          const mockItemReviews = itemReviewsData[currentItem.id] || [
+            {
+              id: 'default',
+              user: {
+                name: 'CUSTOMER',
+                university: 'AAU',
+                avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=400&auto=format&fit=crop'
+              },
+              rating: 4,
+              body: `The ${currentItem.itemName} is delicious! Great flavor and good portion size.`,
+              createdAt: new Date().toISOString()
+            }
+          ];
+          setFoodReviews(mockItemReviews);
+        } else {
+          setFoodReviews(formattedReviews);
+        }
       } catch (error) {
         console.error('Error fetching item reviews:', error);
         // Fallback to default review
+        const currentItem = allMenuItems[currentItemIndex] || mockMenuItems[0];
         setFoodReviews([{
           id: 'default',
           user: {
@@ -100,14 +159,28 @@ const MenuItemDetail = () => {
             avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=400&auto=format&fit=crop'
           },
           rating: 4,
-          body: 'This dish is delicious! Great flavor and good portion size.',
+          body: `The ${currentItem.itemName} is delicious! Great flavor and good portion size.`,
           createdAt: new Date().toISOString()
         }]);
       }
     };
 
     fetchItemReviews();
-  }, [currentItemIndex, allMenuItems]);
+  }, [currentItemIndex, allMenuItems, allData]);
+
+  // Helper function to generate item-specific reviews
+  const generateItemSpecificReview = (itemName, originalReview) => {
+    const itemKeywords = [
+      `The ${itemName} is amazing!`,
+      `I love the ${itemName} here.`,
+      `Best ${itemName} on campus!`,
+      `The ${itemName} was perfectly cooked.`,
+      `Highly recommend the ${itemName}.`
+    ];
+    
+    const randomKeyword = itemKeywords[Math.floor(Math.random() * itemKeywords.length)];
+    return `${randomKeyword} ${originalReview}`;
+  };
 
   // Mock menu items data (fallback)
   const mockMenuItems = [
@@ -118,7 +191,7 @@ const MenuItemDetail = () => {
       price: 120,
       currency: 'ETB',
       category: 'main',
-      image: 'https://images.unsplash.com/photo-1563379926898-05f4575a45d8?q=80&w=1000&auto=format&fit=crop',
+      image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=800&auto=format&fit=crop',
       rating: 4.5,
       isPopular: true,
       isAvailable: true
@@ -130,7 +203,7 @@ const MenuItemDetail = () => {
       price: 150,
       currency: 'ETB',
       category: 'main',
-      image: 'https://media.istockphoto.com/id/870064540/photo/ethiopian-doro-wot.webp?a=1&b=1&s=612x612&w=0&k=20&c=vnxlWJREiw8f4GN_D1pkF8NaGIhDZnajD_ihL9VUXQ8=',
+      image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=800&auto=format&fit=crop',
       rating: 4.8,
       isPopular: true,
       isAvailable: true
@@ -142,7 +215,7 @@ const MenuItemDetail = () => {
       price: 180,
       currency: 'ETB',
       category: 'main',
-      image: 'https://media.istockphoto.com/id/619254834/photo/traditional-oromo-and-ethiopian-cuisine-dish-aka-tibs-ethiopia.jpg?s=612x612&w=0&k=20&c=Box_8s0OZjiEpMZvWuXSHBEOqRbSfzir8oOU2kIJlwQ=',
+      image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=800&auto=format&fit=crop',
       rating: 4.3,
       isPopular: false,
       isAvailable: true
@@ -169,42 +242,6 @@ const MenuItemDetail = () => {
       image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=800&auto=format&fit=crop',
       rating: 4.4,
       isPopular: false,
-      isAvailable: true
-    },
-    {
-      id: 'm6',
-      itemName: 'SPAGHETTI',
-      description: 'Italian pasta with tomato sauce and cheese',
-      price: 120,
-      currency: 'ETB',
-      category: 'pasta',
-      image: 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?q=80&w=800&auto=format&fit=crop',
-      rating: 4.2,
-      isPopular: true,
-      isAvailable: true
-    },
-    {
-      id: 'm7',
-      itemName: 'PIZZA',
-      description: 'Cheese pizza with fresh toppings',
-      price: 150,
-      currency: 'ETB',
-      category: 'fast-food',
-      image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=800&auto=format&fit=crop',
-      rating: 4.7,
-      isPopular: true,
-      isAvailable: true
-    },
-    {
-      id: 'm8',
-      itemName: 'BURGER',
-      description: 'Beef burger with cheese and vegetables',
-      price: 110,
-      currency: 'ETB',
-      category: 'fast-food',
-      image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=400&auto=format&fit=crop',
-      rating: 4.3,
-      isPopular: true,
       isAvailable: true
     }
   ];
@@ -246,32 +283,6 @@ const MenuItemDetail = () => {
         rating: 5,
         body: 'Best Doro Wot in town! The chicken is perfectly cooked and the berbere spice is amazing. Served with fresh injera.',
         createdAt: '2026-01-19T12:30:00Z'
-      }
-    ],
-    'm6': [
-      {
-        id: 'r4',
-        user: {
-          name: 'KENEAN ESHETU',
-          university: 'Freshman, AAU',
-          avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=400&auto=format&fit=crop'
-        },
-        rating: 4,
-        body: 'Good spaghetti for the price. The sauce is flavorful and the pasta is cooked al dente.',
-        createdAt: '2026-01-16T13:20:00Z'
-      }
-    ],
-    'm7': [
-      {
-        id: 'r5',
-        user: {
-          name: 'BEZA TADESSE',
-          university: '3rd Year',
-          avatar: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?q=80&w=400&auto=format&fit=crop'
-        },
-        rating: 5,
-        body: 'Cheesy and delicious! The pizza is fresh and the toppings are generous.',
-        createdAt: '2026-01-15T19:30:00Z'
       }
     ]
   };
@@ -347,6 +358,10 @@ const MenuItemDetail = () => {
                 src={currentItem.image} 
                 alt={currentItem.itemName}
                 className="modal-large-image"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=800&auto=format&fit=crop';
+                }}
               />
               
               {/* Food Info Overlay */}
@@ -390,7 +405,14 @@ const MenuItemDetail = () => {
               <div className="modal-photos-grid">
                 {smallImages.map((img, index) => (
                   <div key={index} className="modal-small-photo">
-                    <img src={img} alt={`${currentItem.itemName} - view ${index + 1}`} />
+                    <img 
+                      src={img} 
+                      alt={`${currentItem.itemName} - view ${index + 1}`}
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=800&auto=format&fit=crop';
+                      }}
+                    />
                   </div>
                 ))}
               </div>
@@ -402,31 +424,41 @@ const MenuItemDetail = () => {
               
               <div className="modal-reviews-container">
                 {foodReviews.map((review, index) => (
-                  <div key={review.id} className="modal-review-card">
+                  <div key={review.id || index} className="modal-review-card">
                     <div className="modal-reviewer-info">
                       <img 
-                        src={review.user.avatar} 
-                        alt={review.user.name}
+                        src={review.user?.avatar} 
+                        alt={review.user?.name}
                         className="modal-reviewer-avatar"
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=400&auto=format&fit=crop';
+                        }}
                       />
                       <div className="modal-reviewer-details">
-                        <h4>{review.user.name}</h4>
-                        <p>{review.user.university}</p>
+                        <h4>{review.user?.name}</h4>
+                        <p>{review.user?.university}</p>
                         <div className="modal-review-stars">
-                          {renderStars(review.rating)}
+                          {renderStars(review.rating || 4)}
                         </div>
                       </div>
                     </div>
                     <p className="modal-review-text">{review.body}</p>
                     <div className="modal-review-date">
-                      {new Date(review.createdAt).toLocaleDateString('en-US', {
+                      {review.createdAt ? new Date(review.createdAt).toLocaleDateString('en-US', {
                         month: 'short',
                         day: 'numeric',
                         year: 'numeric'
-                      })}
+                      }) : 'Recently'}
                     </div>
                   </div>
                 ))}
+                
+                {foodReviews.length === 0 && (
+                  <div className="no-reviews">
+                    <p>No reviews yet for this item. Be the first to review!</p>
+                  </div>
+                )}
               </div>
             </div>
 
