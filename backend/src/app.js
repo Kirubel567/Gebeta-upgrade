@@ -10,6 +10,7 @@ import { corsMiddleware } from "./middleware/corsMiddleware.js";
 import { requestLogger } from "./middleware/requestLogger.js";
 import { jsonBodyParser } from "./middleware/bodyParser.js";
 import { errorHandler } from "./lib/middleware.js";
+import { registerChatRoutes } from "./modules/chat/chat.routes.js";
 
 const app = new Router();
 
@@ -20,6 +21,7 @@ registerReviewRoutes(app);
 registerDeliveryRoutes(app);
 registerMenuRoutes(app);
 registerApplicationRoutes(app);
+registerChatRoutes(app); 
 
 // Simple Health Check Route
 app.get("/api/health", (req, res) => {
