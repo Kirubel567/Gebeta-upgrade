@@ -9,19 +9,25 @@ export const runMiddleware = async (req, res, middlewares) => {
         let nextCalled = false;
 
         // Create a next() function for each middleware
-        const next = () => {
+        const next = (err) => {
             nextCalled = true;
+            if (err) throw err; // Throw to be caught by catch block below
         };
 
         try {
             // Execute the middleware
+            // console.log(`[DEBUG] Running middleware: ${mw.name || 'anonymous'}`); 
             await mw(req, res, next);
 
             // If a middleware didn't call next(), it means it handled the response
             // or wants to stop the chain. So we return false.
-            if (!nextCalled) return false;
+            if (!nextCalled) {
+                // console.log(`[DEBUG] Middleware ${mw.name} did not call next()`);
+                return false;
+            }
         } catch (err) {
             // If any middleware throws an error, catch it
+            // console.log(`[DEBUG] Error in middleware ${mw.name}:`, err);
             errorHandler(err, req, res);
             return false;
         }
@@ -34,10 +40,10 @@ export const runMiddleware = async (req, res, middlewares) => {
  * Centralizes error logging and response formatting
  */
 export const errorHandler = (err, req, res) => {
-    // Log the error using our new Logger
+    // 1. Log the error using our new Logger
     logger.error(err.message || 'Internal Server Error', err);
 
-    // Normalize the error
+    // 2. Normalize the error
     let error = err;
     if (!(error instanceof ApiError)) {
         const statusCode = error.statusCode || error instanceof SyntaxError ? 400 : 500;
@@ -45,7 +51,7 @@ export const errorHandler = (err, req, res) => {
         error = new ApiError(statusCode, message, error?.errors || [], error.stack);
     }
 
-    // Construct response object
+    // 3. Construct response object
     const response = {
         success: false,
         statusCode: error.statusCode,
@@ -55,16 +61,12 @@ export const errorHandler = (err, req, res) => {
         ...(process.env.NODE_ENV !== "production" && { stack: error.stack }),
     };
 
-    // Send response if not already sent
+    // 4. Send response if not already sent
     if (!res.headersSent) {
         res.writeHead(error.statusCode, { "Content-Type": "application/json" });
         res.end(JSON.stringify(response));
     }
 };
-
-
-// Async Handler Wrapper
-// Wraps async route handlers to catch errors automatically
 
 export const asyncHandler = (fn) => async (req, res) => {
     try {
@@ -72,4 +74,12 @@ export const asyncHandler = (fn) => async (req, res) => {
     } catch (err) {
         errorHandler(err, req, res);
     }
+};
+
+/**
+ * Helper to apply middlewares to a specific route
+ * Usage: app.get("/route", applyMiddleware(authMiddleware, controller))
+ */
+export const applyMiddleware = (...handlers) => async (req, res) => {
+    await runMiddleware(req, res, handlers);
 };

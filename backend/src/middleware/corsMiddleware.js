@@ -2,7 +2,7 @@ import { ApiError } from "../utils/ApiError.js";
 
 // cors middleware - restricing access to allowed origin
 
-const allowedOrigins = [ "http://localhost:3000", "https://localhost:5173"]; // to be added
+const allowedOrigins = [ "http://localhost:3000", "https://localhost:5173"]; // to be added - todo
 
 export const corsMiddleware = (req,res, next) => {
     const origin = req.headers.origin;

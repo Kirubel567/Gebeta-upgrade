@@ -1,4 +1,6 @@
 import * as BussinessController from "./business.controller.js";
+import { applyMiddleware } from "../../lib/middleware.js";
+import { authMiddleware, authorize } from "../../middleware/authMiddleware.js";
 
 export const registerBusinessRoutes = (app) => {
   app.get("/api/businesses", BussinessController.getAll);
@@ -17,7 +19,7 @@ export const registerBusinessRoutes = (app) => {
   app.get("/api/businesses/detail/:id", BussinessController.getById);
 
   //CRUD actions on the businesses
-  app.post("/api/businesses", BussinessController.create);
-  app.put("/api/businesses/:id", BussinessController.update);
-  app.delete("/api/businesses/:id", BussinessController.remove);
+  app.post("/api/businesses", applyMiddleware(authMiddleware, BussinessController.create));
+  app.put("/api/businesses/:id",applyMiddleware(authMiddleware,authorize("admin"),BussinessController.update));
+  app.delete("/api/businesses/:id",applyMiddleware(authMiddleware,authorize("admin"),BussinessController.remove));
 };

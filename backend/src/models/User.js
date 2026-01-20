@@ -16,12 +16,12 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
     avatar: {
-      tpe: String,
+      type: String,
       default: null,
     },
 
     //university info
-    univeristy: {
+    university: {
       type: String,
       default: "AAU",
     },
