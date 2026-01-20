@@ -22,8 +22,16 @@ class Router {
 
   //method for defining where to send the incoming requests
   handleRoutes(req, res) {
-    const { method, url } = req;
-    const path = url.split("?")[0];
+
+    //added this inorder to parse url and put the body to req.query
+    const { method, url: fullUrl } = req;
+
+    //parse url for query parameters
+    const parseUrl = new URL(fullUrl, `http://${req.headers.host}`);
+    const path = parseUrl.pathname;
+
+    //attach the query object to req
+    req.query = Object.fromEntries(parseUrl.searchParams);
 
     for (const routeKey in this.routes) {
       const [routeMethod, routePath] = routeKey.split(" ");
@@ -32,7 +40,7 @@ class Router {
 
       //convert /api/businesses/:id to regex
       const regex = new RegExp(
-        "^" + routePath.replace(/:\w+/g, "([^/]+)") + "$"
+        "^" + routePath.replace(/:\w+/g, "([^/]+)") + "$",
       );
       const match = path.match(regex);
 

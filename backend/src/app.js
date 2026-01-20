@@ -1,5 +1,7 @@
 import Router from "./lib/Router.js";
 import { registerBusinessRoutes } from "./modules/business/business.routes.js";
+import { registerMenuRoutes } from "./modules/menu/menu.routes.js";
+import { registerApplicationRoutes } from "./modules/application/application.routes.js";
 import { runMiddleware } from "./lib/middleware.js";
 import { corsMiddleware } from "./middleware/corsMiddleware.js";
 import { requestLogger } from "./middleware/requestLogger.js";
@@ -10,6 +12,8 @@ const app = new Router();
 
 // Register Routes
 registerBusinessRoutes(app);
+registerMenuRoutes(app);
+registerApplicationRoutes(app);
 
 // Simple Health Check Route
 app.get("/api/health", (req, res) => {
