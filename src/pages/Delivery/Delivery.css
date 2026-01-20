@@ -2,7 +2,10 @@
 
 /* Main Container */
 .delivery-page {
-  padding: var(--section-padding);
+  .delivery-page {
+  padding: 20px 0;
+}
+
   max-width: var(--container-width);
   margin: 0 auto;
 }
@@ -17,13 +20,13 @@
   font-weight: 700;
 }
 
-/* Filter Bar - SAME AS REVIEWS PAGE */
+/* Filter Bar - */
 .filter-bar {
   display: flex;
   background-color: var(--accent-green);
   border-radius: 50px;
   padding: 5px;
-  margin: 40px auto 20px auto; /* Changed to match Reviews */
+  margin: 10px auto 20px auto;
   max-width: 800px;
   align-items: center;
 }
@@ -60,16 +63,16 @@
   cursor: pointer;
 }
 
-/* Search box styles - SAME AS REVIEWS */
 .search-box-container {
-  margin-top: 15px;
-  margin-bottom: 20px;
+   max-width: var(--container-width);
+  
 }
 
 .search-box {
   position: relative;
   display: flex;
   align-items: center;
+  max-width: var(--container-width);
 }
 
 .search-input {
