@@ -1,40 +1,37 @@
 import Business from "../../models/Business.js";
-import { parseBody } from "../../utils/parseBody.js";
+import { User } from "../../models/User.js";
 import mongoose from "mongoose";
 //@desc get all businesses with search and category filter
 //@route GET
 export const getAll = async (req, res) => {
   try {
-    //parse the url and get the query parameter
-    const url = new URL(req.url, `http://${req.headers.host}`);
+    // 1. Use req.query (already parsed by your Router)
+    // We use || to provide defaults if the user doesn't send them
+    const page = parseInt(req.query?.page) || 1;
+    const limit = parseInt(req.query?.limit) || 10;
 
-    //paginate
-    const page = parseInt(url.searchParams.get("page")) || 1;
-    const limit = parseInt(url.searchParams.get("limit")) || 10;
+    // 2. Calculate skip clearly
     const skip = (page - 1) * limit;
 
-    //filter and search
-    const category = url.searchParams.get("category");
-    const search = url.searchParams.get("search");
-    const sort = url.searchParams.get("sort"); //rating, or newest or name
+    const category = req.query?.category;
+    const search = req.query?.search;
+    const sort = req.query?.sort;
 
     let query = {};
     if (category) query.category = category;
     if (search) query.name = { $regex: search, $options: "i" };
 
-    //sort based on the query
     let sortOption = {};
     if (sort === "rating") sortOption = { "rating.average": -1 };
     else if (sort === "newest") sortOption = { createdAt: -1 };
     else if (sort === "name") sortOption = { name: 1 };
 
-    //find from the database, pagenate and limit
+    // 3. Database operation
     const businesses = await Business.find(query)
       .sort(sortOption)
       .skip(skip)
       .limit(limit);
 
-    //total count for Ui pagenation
     const total = await Business.countDocuments(query);
 
     res.writeHead(200, { "Content-Type": "application/json" });
@@ -47,9 +44,10 @@ export const getAll = async (req, res) => {
           limit,
           pages: Math.ceil(total / limit),
         },
-      })
+      }),
     );
   } catch (err) {
+    // This catches the "skip is not defined" error if it happens
     res.writeHead(500, { "Content-Type": "application/json" });
     res.end(JSON.stringify({ error: err.message }));
   }
@@ -87,7 +85,7 @@ export const getFeatured = async (req, res) => {
     //so featured section for those with the highes ratings
     const featured = await Business.find({ isFeatured: true })
       .sort({ "rating.average": -1 })
-      .limit(3);
+      .limit(5);
     res.writeHead(200, { "Content-Type": "application/json" });
     res.end(JSON.stringify(featured));
   } catch (err) {
@@ -109,12 +107,23 @@ export const getByCategory = async (req, res) => {
     res.end(JSON.stringify({ error: "Categrory fetch failed" }));
   }
 };
-//@desc create a business list
+//desc create a business list
 //@route
 export const create = async (req, res) => {
   try {
-    const data = await parseBody(req);
+    const data = req.body;
+
+    // Assign the current user as the owner
+    // if (req.user) {
+    //   data.owner = req.user._id;
+    // }
+
     const doc = await Business.create(data);
+
+    // Upgrade user role to business_owner if they are a standard user
+    if (req.user && req.user.role === "user") {
+      await User.findByIdAndUpdate(req.user._id, { role: "business_owner" });
+    }
 
     res.writeHead(201, { "Content-Type": "application/json" });
     res.end(JSON.stringify(doc));
@@ -129,7 +138,7 @@ export const create = async (req, res) => {
 export const update = async (req, res) => {
   try {
     const { id } = req.params;
-    const data = await parseBody(req);
+    const data = req.body;
     const updated = await Business.findByIdAndUpdate(id, data, { new: true });
 
     res.writeHead(200, { "Content-Type": "application/json" });
@@ -144,7 +153,7 @@ export const update = async (req, res) => {
 export const remove = async (req, res) => {
   try {
     const { id } = req.params;
-    const updated = await Business.findByIdAndDelete(id);
+    const deleted = await Business.findByIdAndDelete(id);
 
     res.writeHead(200, { "Content-Type": "application/json" });
     res.end(JSON.stringify({ message: "Deleted" }));

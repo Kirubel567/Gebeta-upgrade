@@ -1,77 +1,50 @@
-// backend/seed.js
 import mongoose from 'mongoose';
 import Business from './src/models/Business.js';
+import {MenuItem} from './src/models/MenuItem.js'; // Ensure this path is correct
 import 'dotenv/config';
 
-// Helper function to create slugs manually for seeding
-const createSlug = (name) => {
-  return name
-    .toLowerCase()
-    .trim()
-    .replace(/[^\w\s-]/g, "")
-    .replace(/\s+/g, "-");
-};
+const createSlug = (name) => name.toLowerCase().trim().replace(/[^\w\s-]/g, "").replace(/\s+/g, "-");
 
-const seedData = [
-  {
-    name: "Student Center Cafeteria",
-    category: "on-campus",
-    location: { address: "Main Campus, Building A" },
-    description: "The heart of campus dining.",
-    rating: { average: 3.5, count: 150 },
-    isFeatured: true,
-  },
-  {
-    name: "Burger Dash",
-    category: "delivery",
-    location: { address: "Off-campus HQ" },
-    description: "Fastest delivery to all dorms.",
-    rating: { average: 4.8, count: 500 },
-    isFeatured: true,
-  },
-  {
-    name: "Green Garden",
-    category: "off-campus",
-    location: { address: "South Gate" },
-    description: "Vegetarian friendly spot.",
-    rating: { average: 4.2, count: 85 },
-    isFeatured: false,
-  },
-  {
-    name: "Night Owl Pizza",
-    category: "delivery",
-    location: { address: "Downtown" },
-    description: "Open until 3 AM.",
-    rating: { average: 3.9, count: 210 },
-    isFeatured: false,
-  }
-].map(item => ({ ...item, slug: createSlug(item.name) })); // Generate slugs here!
+const businesses = [
+  { name: "Student Center Cafeteria", category: "on-campus", isFeatured: true, rating: { average: 3.5, count: 10 } },
+  { name: "Burger Dash", category: "delivery", isFeatured: true, rating: { average: 4.8, count: 20 } },
+  { name: "Green Garden", category: "off-campus", isFeatured: false, rating: { average: 4.2, count: 15 } },
+  { name: "Night Owl Pizza", category: "delivery", isFeatured: false, rating: { average: 3.9, count: 30 } },
+  { name: "Campus Coffee", category: "on-campus", isFeatured: true, rating: { average: 4.5, count: 50 } },
+  { name: "Dorm Bites", category: "on-campus", isFeatured: false, rating: { average: 3.0, count: 5 } },
+  { name: "Sushi Station", category: "delivery", isFeatured: false, rating: { average: 4.7, count: 12 } },
+  { name: "The Grill House", category: "off-campus", isFeatured: true, rating: { average: 4.1, count: 25 } },
+  { name: "Pasta Express", category: "delivery", isFeatured: false, rating: { average: 3.8, count: 18 } },
+  { name: "Library Lounge", category: "on-campus", isFeatured: false, rating: { average: 4.0, count: 22 } },
+  { name: "Taco Truck", category: "off-campus", isFeatured: false, rating: { average: 4.6, count: 40 } },
+  { name: "Waffle World", category: "on-campus", isFeatured: true, rating: { average: 4.9, count: 100 } },
+].map(b => ({ ...b, slug: createSlug(b.name), location: { address: "Sample Address" } }));
 
 const runSeed = async () => {
   try {
     await mongoose.connect(process.env.MONGODB_URI);
-    console.log("Connected to DB...");
-    
-    // 1. Clear the collection
-    await Business.deleteMany({});
-    console.log("Cleared old businesses...");
+    console.log("Connected...");
 
-    // 2. IMPORTANT: If the error persists, drop the index and let Mongoose recreate it
-    try {
-        await Business.collection.dropIndex("slug_1");
-    } catch (e) {
-        console.log("Slug index already clean.");
-    }
-    
-    // 3. Insert fresh data
-    await Business.insertMany(seedData);
-    
-    console.log("✅ Database Seeded Successfully with manual slugs!");
+    await Business.deleteMany({});
+    await MenuItem.deleteMany({});
+
+    const createdBusinesses = await Business.insertMany(businesses);
+    console.log(`Inserted ${createdBusinesses.length} businesses.`);
+
+    // Create Menu Items for the first business (Student Center)
+    const menuItems = [
+      { name: "Classic Burger", price: 5.99, isPopular: true, business: createdBusinesses[0]._id },
+      { name: "French Fries", price: 2.50, isPopular: false, business: createdBusinesses[0]._id },
+      { name: "Soda", price: 1.50, isPopular: false, business: createdBusinesses[0]._id }
+    ];
+    await MenuItem.deleteMany({});
+    await MenuItem.insertMany(menuItems);
+
+    console.log("✅ Seeding Complete!");
     process.exit();
   } catch (err) {
-    console.error("❌ Seeding failed:", err);
+    console.error(err);
     process.exit(1);
   }
 };
-
 runSeed();

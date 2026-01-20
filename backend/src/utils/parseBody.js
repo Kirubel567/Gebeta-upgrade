@@ -1,5 +1,13 @@
+// Helper to get request body -  Acts as a bridge: returns req.body if middleware parsed it, otherwise parses stream manually (legacy support)
+
 export const parseBody = (req) => {
   return new Promise((resolve, reject) => {
+    //  If middleware already parsed the body, return it immediately
+    if (req.body) {
+      return resolve(req.body);
+    }
+
+    //  Fallback: Parse stream manually cuz no size limits here
     try {
       let body = "";
       req.on("data", (chunk) => {

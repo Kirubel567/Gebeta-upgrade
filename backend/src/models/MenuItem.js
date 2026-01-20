@@ -11,6 +11,8 @@ const menuItemSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
+      lowercase: true,
+      trim: true,
     },
     description: {
       type: String,
@@ -56,7 +58,9 @@ const menuItemSchema = new mongoose.Schema(
   }
 );
 
-menuItemsSchema.index({ business: 1, category: 1 });
-menuItemsSchema.index({ business: 1, isPopular: -1 });
+menuItemSchema.index({ business: 1, category: 1 });
+menuItemSchema.index({ business: 1, isPopular: -1 });
+
+menuItemSchema.index({ name: 1, business: 1 }, { unique: true });
 
 export const MenuItem = mongoose.model("MenuItem", menuItemSchema);
