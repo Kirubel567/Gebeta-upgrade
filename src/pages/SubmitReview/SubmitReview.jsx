@@ -5,7 +5,7 @@ import './SubmitReview.css';
 const SubmitReview = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { business, onReviewSubmit } = location.state || {};
+  const { business: businessFromState, onReviewSubmit } = location.state || {};
   const [rating, setRating] = useState(0);
   const [reviewText, setReviewText] = useState('');
   const [recentReviews, setRecentReviews] = useState([]);
@@ -13,73 +13,110 @@ const SubmitReview = () => {
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
   const [hoverRating, setHoverRating] = useState(0);
+  const [businessData, setBusinessData] = useState(null);
+  const [allData, setAllData] = useState(null);
 
-  // MOCK DATA - Fallback if API fails
-  const mockBusinessData = business || {
-    id: 'b1',
-    name: 'STUDENT CENTER CAFETERIA',
-    image: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=1000&auto=format&fit=crop',
-    location: '5K DORMITORY',
-    category: 'on-campus',
-    rating: 4.5,
-    reviews: 234
-  };
-
-  const mockRecentReviews = [
-    {
-      id: 'r1',
-      user: {
-        name: 'SELAM TADESSE',
-        university: '6K, AAU',
-        avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHx2aXN1YWwtc2VhcmNofDF8fHxlbnwwfHx8fHw%3D'
-      },
-      rating: 5,
-      body: 'I had an amazing experience at this restaurant! The place was clean, beautifully decorated, and the staff were incredibly polite. I ordered the beef tibs with injera, and it...',
-      createdAt: '2026-01-18T10:30:00Z'
-    },
-    {
-      id: 'r2',
-      user: {
-        name: 'MIHIRET ADMASU',
-        university: '5K, AAU',
-        avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200&auto=format&fit=crop'
-      },
-      rating: 4,
-      body: 'Great food quality and reasonable prices. The service could be faster during peak hours though.',
-      createdAt: '2026-01-17T14:20:00Z'
-    }
-  ];
-
-  // Fetch recent reviews
+  // Fetch all data from db.json
   useEffect(() => {
-    const fetchRecentReviews = async () => {
+    const fetchData = async () => {
       try {
-        // API Endpoint: GET /api/reviews/business/:businessId
-        const targetBusinessId = mockBusinessData?.id || 'b1';
-        const response = await fetch(`/api/reviews/business/${targetBusinessId}?limit=3&sort=newest`);
+        const response = await fetch('/db.json');
+        const data = await response.json();
+        setAllData(data);
         
-        if (response.ok) {
-          const data = await response.json();
-          if (data.success) {
-            setRecentReviews(data.data);
-          } else {
-            throw new Error(data.error?.message || 'Failed to fetch reviews');
-          }
+        // Get business data
+        let businessInfo;
+        if (businessFromState) {
+          businessInfo = businessFromState;
         } else {
-          // If API fails, use mock data
-          console.log('Reviews API failed, using mock data');
-          setRecentReviews(mockRecentReviews);
+          // Get first business from db.json as default
+          const defaultBusiness = data.businesses[0];
+          businessInfo = {
+            id: defaultBusiness.id,
+            name: defaultBusiness.name,
+            image: defaultBusiness.image?.[0]?.url || 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=1000&auto=format&fit=crop',
+            location: defaultBusiness.location?.address || 'Unknown Location',
+            category: defaultBusiness.category,
+            rating: defaultBusiness.rating?.average || 0,
+            reviews: defaultBusiness.rating?.count || 0
+          };
         }
+        setBusinessData(businessInfo);
+
+        // Get recent reviews for this business
+        const businessReviews = data.reviews
+          .filter(review => review.businessId === businessInfo.id && review.isApproved)
+          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+          .slice(0, 3);
+
+        // Add user info to reviews
+        const reviewsWithUsers = businessReviews.map(review => {
+          const user = data.users.find(u => u.id === review.userId) || {
+            name: 'Anonymous',
+            avatar: 'https://i.pravatar.cc/150?img=0',
+            university: 'AAU',
+            dormitory: 'Unknown'
+          };
+          
+          return {
+            id: review.id,
+            user: {
+              name: user.name,
+              avatar: user.avatar,
+              university: `${user.dormitory}, ${user.university}`
+            },
+            rating: review.rating,
+            body: review.body,
+            createdAt: review.createdAt
+          };
+        });
+
+        setRecentReviews(reviewsWithUsers);
+
       } catch (error) {
-        console.error('Error fetching reviews:', error);
-        setRecentReviews(mockRecentReviews);
+        console.error('Error fetching data:', error);
+        // Fallback data
+        setBusinessData({
+          id: 'b1',
+          name: 'STUDENT CENTER CAFETERIA',
+          image: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=1000&auto=format&fit=crop',
+          location: '5K DORMITORY',
+          category: 'on-campus',
+          rating: 4.5,
+          reviews: 234
+        });
+        
+        setRecentReviews([
+          {
+            id: 'r1',
+            user: {
+              name: 'SELAM TADESSE',
+              university: '6K, AAU',
+              avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHx2aXN1YWwtc2VhcmNofDF8fHxlbnwwfHx8fHw%3D'
+            },
+            rating: 5,
+            body: 'I had an amazing experience at this restaurant! The place was clean, beautifully decorated, and the staff were incredibly polite. I ordered the beef tibs with injera, and it...',
+            createdAt: '2026-01-18T10:30:00Z'
+          },
+          {
+            id: 'r2',
+            user: {
+              name: 'MIHIRET ADMASU',
+              university: '5K, AAU',
+              avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200&auto=format&fit=crop'
+            },
+            rating: 4,
+            body: 'Great food quality and reasonable prices. The service could be faster during peak hours though.',
+            createdAt: '2026-01-17T14:20:00Z'
+          }
+        ]);
       } finally {
         setLoading(prev => ({ ...prev, reviews: false }));
       }
     };
 
-    fetchRecentReviews();
-  }, [mockBusinessData?.id]);
+    fetchData();
+  }, [businessFromState]);
 
   const handleStarClick = (starIndex) => {
     setRating(starIndex + 1);
@@ -106,39 +143,39 @@ const SubmitReview = () => {
       return;
     }
 
+    if (!businessData) {
+      setMessage({ type: 'error', text: 'Error loading business data' });
+      return;
+    }
+
     setSubmitting(true);
     setMessage({ type: '', text: '' });
 
     try {
-      // Simulate API call to submit review
-      // API Endpoint: POST /api/reviews
-      const token = localStorage.getItem('authToken');
-      
-      const response = await fetch('/api/reviews', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': token ? `Bearer ${token}` : ''
-        },
-        body: JSON.stringify({
-          businessId: mockBusinessData?.id || 'b1',
-          rating: rating,
-          body: reviewText
-        })
-      });
+      // Create new review
+      const newReviewId = `r${Date.now()}`;
+      const currentUser = allData?.users?.[0] || {
+        id: 'u1',
+        name: 'You',
+        avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=200&auto=format&fit=crop',
+        university: 'AAU',
+        dormitory: '5K',
+        yearOfStudy: 'Student'
+      };
 
-      // For demo purposes, we'll simulate a successful response
       const newReview = {
-        id: `r${Date.now()}`,
-        name: 'You', // This would come from user profile
-        year: 'Student',
+        id: newReviewId,
+        user: {
+          name: currentUser.name,
+          avatar: currentUser.avatar,
+          university: `${currentUser.dormitory || ''}, ${currentUser.university || 'AAU'}`
+        },
         rating: rating,
-        image: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=200&auto=format&fit=crop',
         body: reviewText,
         createdAt: new Date().toISOString()
       };
 
-      // Call the callback function to update parent component
+      // Call the callback function if provided
       if (onReviewSubmit) {
         onReviewSubmit(newReview);
       }
@@ -160,7 +197,7 @@ const SubmitReview = () => {
       setTimeout(() => {
         navigate(`/customer-review`, { 
           state: { 
-            business: mockBusinessData,
+            business: businessData,
             scrollToReviews: true 
           } 
         });
@@ -168,24 +205,10 @@ const SubmitReview = () => {
 
     } catch (error) {
       console.error('Error submitting review:', error);
-      
-      // Handle specific error types
-      if (error.message.includes('already reviewed')) {
-        setMessage({ 
-          type: 'error', 
-          text: 'You have already reviewed this business' 
-        });
-      } else if (error.message.includes('Unauthorized')) {
-        setMessage({ 
-          type: 'error', 
-          text: 'Please login to submit a review' 
-        });
-      } else {
-        setMessage({ 
-          type: 'error', 
-          text: 'Failed to submit review. Please try again.' 
-        });
-      }
+      setMessage({ 
+        type: 'error', 
+        text: 'Failed to submit review. Please try again.' 
+      });
     } finally {
       setSubmitting(false);
     }
@@ -197,7 +220,6 @@ const SubmitReview = () => {
       let starClass = 'fa-regular fa-star';
       
       if (interactive) {
-        // Show hover effect or selected rating
         const displayRating = hoverRating || rating;
         starClass = starValue <= displayRating ? 'fa-solid fa-star active' : 'fa-regular fa-star';
       } else {
@@ -223,6 +245,18 @@ const SubmitReview = () => {
     });
   };
 
+  if (!businessData) {
+    return (
+      <main>
+        <div className="submit-review-container">
+          <div className="loading">
+            <p>Loading...</p>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main>
       <div className="submit-review-container">
@@ -230,15 +264,19 @@ const SubmitReview = () => {
         <div className="submit-form-area">
           <div className="place-info">
             <img 
-              src={mockBusinessData.image || mockBusinessData.mainImage} 
-              alt={mockBusinessData.name}
+              src={businessData.image} 
+              alt={businessData.name}
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=1000&auto=format&fit=crop';
+              }}
             />
             <div className="cafeteriaDescription">
               <h3 style={{ margin: 0, fontFamily: 'var(--font-heading)' }}>
-                {mockBusinessData.name}
+                {businessData.name}
               </h3>
               <p style={{ color: 'var(--text-grey)', margin: 0 }}>
-                {mockBusinessData.location}
+                {businessData.location}
               </p>
             </div>
           </div>
@@ -300,7 +338,7 @@ const SubmitReview = () => {
               {message.text}
               {message.type === 'success' && (
                 <div style={{ marginTop: '10px', fontSize: '0.9rem' }}>
-                  Redirecting back to {mockBusinessData.name}...
+                  Redirecting back to {businessData.name}...
                 </div>
               )}
             </div>
@@ -341,12 +379,16 @@ const SubmitReview = () => {
                 <div className="review-header">
                   <img 
                     className="reviewer-img" 
-                    src={review.user?.avatar || review.image} 
-                    alt={review.user?.name || review.name}
+                    src={review.user?.avatar} 
+                    alt={review.user?.name}
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = 'https://i.pravatar.cc/150?img=0';
+                    }}
                   />
                   <div className="reviewer-info">
-                    <h4>{review.user?.name || review.name}</h4>
-                    <p>{review.user?.university || review.year || ''}</p>
+                    <h4>{review.user?.name}</h4>
+                    <p>{review.user?.university || ''}</p>
                     <div className="rating-stars" style={{ fontSize: '0.8rem', margin: 0 }}>
                       {renderStars(review.rating)}
                     </div>
@@ -358,7 +400,7 @@ const SubmitReview = () => {
                     : review.body}
                 </p>
                 {review.body.length > 150 && (
-                  <Link to={`/customer-review`} state={{ business: mockBusinessData }}>
+                  <Link to={`/customer-review`} state={{ business: businessData }}>
                     <button className="btn btn-outline" style={{ 
                       fontSize: '0.8rem', 
                       padding: '5px 15px', 
@@ -378,7 +420,7 @@ const SubmitReview = () => {
 
           {/* View All Reviews Button */}
           <div style={{ textAlign: 'center', marginTop: '20px' }}>
-            <Link to={`/customer-review`} state={{ business: mockBusinessData }}>
+            <Link to={`/customer-review`} state={{ business: businessData }}>
               <button className="btn btn-outline">
                 View All Reviews
               </button>
