@@ -1,7 +1,7 @@
 import * as UserController from "./user.controller.js";
 import { applyMiddleware } from "../../lib/middleware.js";
 import { asyncHandler } from "../../lib/middleware.js";
-import { authMiddleware } from "../../middleware/authMiddleware.js";
+import { authMiddleware, authorize } from "../../middleware/authMiddleware.js";
 
 // Note: We wrap controllers in asyncHandler to ensure errors are caught
 // (Although applyMiddleware usually handles this automatically for async functions, 
@@ -25,4 +25,13 @@ export const registerUserRoutes = (app) => {
         applyMiddleware(authMiddleware, UserController.updateProfile)
     );
 
+    //private and role based route
+      app.post(
+        "/api/admin/make-admin",
+        applyMiddleware(
+          authMiddleware,
+          authorize("super_admin"),
+          asyncHandler(UserController.makeAdmin),
+        )
+    )
 };

@@ -164,3 +164,53 @@ export const logout = async (req, res) => {
     res.end(JSON.stringify(response));
 };
 
+//@desc make a user an admin
+//@route POST /api/admin/make-admin
+export const makeAdmin = async (req, res) => {
+  try {
+    const { userId } = req.body;
+    //first find the user 
+    const user = await User.findOne({_id: userId}); 
+
+    //check if the user already exists or if it is already an admin
+    if (!user) {
+      res.writeHead(404, { "Content-Type": "application/json" });
+      return res.end(JSON.stringify({ message: "User not found" }));
+    }
+    
+    if (user.role == "admin") {
+      res.writeHead(400, { "Content-Type": "application/json" });
+      return res.end(
+        JSON.stringify({
+          success: false,
+          message: "the user is already an admin",
+        }),
+      );
+    }
+    //first find the user and update it
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { role: "admin" },
+      { new: true },
+    ).select("-passwordHash");
+
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(
+      JSON.stringify({
+        success: true,
+        user: updatedUser,
+        message: `${updatedUser.name} is now an admin`,
+      }),
+    );
+  } catch (err) {
+    res.writeHead(500, { "Content-Type": "application/json" });
+    res.end(
+      JSON.stringify({
+        success: false,
+        error: err.message,
+      }),
+    );
+  }
+};
+
+

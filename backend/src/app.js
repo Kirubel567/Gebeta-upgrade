@@ -11,7 +11,6 @@ import { requestLogger } from "./middleware/requestLogger.js";
 import { jsonBodyParser } from "./middleware/bodyParser.js";
 import { errorHandler } from "./lib/middleware.js";
 import { registerChatRoutes } from "./modules/chat/chat.routes.js";
-
 const app = new Router();
 
 // Register Routes
