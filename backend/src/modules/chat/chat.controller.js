@@ -3,20 +3,8 @@ import { getAiResponse } from "../../lib/gemini.js";
 
 export const handleUserMessage = async (req, res) => {
   try {
-    // --- 1. MANUALLY PARSE THE BODY (If req.body is undefined) ---
-    let body = "";
-    
-    // Listen for data chunks
-    await new Promise((resolve) => {
-        req.on("data", (chunk) => {
-            body += chunk.toString();
-        });
-        req.on("end", resolve);
-    });
-
-    // Parse the string into an object
-    const parsedBody = body ? JSON.parse(body) : {};
-    const { message } = parsedBody;
+    // --- 1. USE PARSED BODY ---
+    const { message } = req.body || {};
 
     // --- 2. VALIDATE MESSAGE ---
     if (!message) {
@@ -26,7 +14,7 @@ export const handleUserMessage = async (req, res) => {
 
     // --- 3. GET DATABASE CONTEXT ---
     const campusData = await ChatService.getCampusContext();
-    
+
     // --- 4. PREPARE PROMPT & CALL GEMINI ---
     const systemPrompt = `
         You are the "Gebeta Review Assistant", a helpful, friendly, and reliable AI for a university campus service review platform called "Gebeta".
@@ -82,10 +70,10 @@ export const handleUserMessage = async (req, res) => {
   } catch (error) {
     console.error("AI Brain Error:", error);
     res.writeHead(500, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ 
-      success: false, 
-      message: "AI Brain Error", 
-      error: error.message 
+    res.end(JSON.stringify({
+      success: false,
+      message: "AI Brain Error",
+      error: error.message
     }));
   }
 };
