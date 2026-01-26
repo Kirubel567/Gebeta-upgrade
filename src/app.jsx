@@ -14,6 +14,7 @@ import SubmitReview from './pages/SubmitReview/SubmitReview';
 import Login from './pages/Login/Login';
 import MenuItemDetail from './pages/MenuItemDetail/MenuItemDetail';
 import UserProfile from './pages/UserProfile/UserProfile';
+import ChatWidget from './components/ChatWidget/ChatWidget';
 
 function Layout() {
   const location = useLocation();
@@ -37,6 +38,7 @@ function Layout() {
         </Routes>
       </main>
       {!hideHeaderFooter && <Footer />}
+      <ChatWidget />
     </div>
   );
 }

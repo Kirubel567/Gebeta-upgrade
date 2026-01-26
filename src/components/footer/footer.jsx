@@ -31,7 +31,7 @@ const Footer = () => {
           <p className="small-text">
             Submit Your Details And Get Featured On Our Platform.
           </p>
-          <Link to="/application">
+          <Link to="/about#business-sec">
             <Button variant="primary" className="script-font">
               Submit Application
             </Button>
