@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from 'mongoose'; 
 import Business from './src/models/Business.js';
 import {MenuItem} from './src/models/MenuItem.js'; // Ensure this path is correct
 import 'dotenv/config';
