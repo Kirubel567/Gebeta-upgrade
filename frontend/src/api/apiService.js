@@ -45,7 +45,7 @@ export const businessService = {
     },
 
     getFeatured: async (limit = 6) => {
-        return apiClient(`/api/businesses/featured?limit=${limit}`, { method: 'GET' });
+        return apiClient(`/api/businesses/featured`, { method: 'GET' });
     },
 
     getByCategory: async (category, params = {}) => {
@@ -55,6 +55,9 @@ export const businessService = {
 
     getById: async (id) => {
         return apiClient(`/api/businesses/detail/${id}`, { method: 'GET' });
+    },
+    search: async (query) => {
+        return apiClient(`/api/businesses/search?query=${query}`, { method: 'GET' });
     },
 
     // Admin only
@@ -74,7 +77,7 @@ export const businessService = {
 
     delete: async (id) => {
         return apiClient(`/api/businesses/${id}`, { method: 'DELETE' });
-    }
+    }   
 };
 
 // ==========================================

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Button from '../../components/Button/Button';
+import { businessService, reviewService } from '../../api/apiService';
+import { handleApiError } from '../../utils/errorHandler';
 import './Home.css';
 
 const Home = () => {
@@ -15,122 +17,121 @@ const Home = () => {
 
   const fetchData = async () => {
     try {
+      setLoading(true);
+      setError(null);
       // Fetch featured businesses AND reviews using API documentation structure
       const [businessesResponse, reviewsResponse] = await Promise.all([
-        fetch('http://localhost:3000/businesses?isFeatured=true&_limit=6'),
-        fetch('http://localhost:3000/reviews?_limit=6&_sort=createdAt&_order=desc')
+        businessService.getAll({ limit: 6 }),
+        reviewService.getAll({ limit: 6 })
       ]);
       
       if (!businessesResponse.ok || !reviewsResponse.ok) {
         throw new Error('Failed to fetch data from server');
       }
       
-      const businessesData = await businessesResponse.json();
-      const reviewsData = await reviewsResponse.json();
-      
-      setBusinesses(businessesData);
-      setReviews(reviewsData);
+      // Extract data from the standardized response { success: true, data: [...] }
+      setBusinesses(businessesResponse.data || []);
+      setReviews(reviewsResponse.data || []);
     } catch (err) {
-      setError(err.message);
-      console.error('Error fetching data:', err);
+      handleApiError(err, setError);
+      console.error('Error fetching Gebeta data:', err);
     } finally {
       setLoading(false);
     }
   };
 
-  // Get businesses to display
-  const businessesToDisplay = businesses.length > 0 
-    ? businesses.slice(0, 6)
-    : [
-        // Fallback static data if API returns nothing
-        { 
-          id: "b1", 
-          name: "DESTA CAFE", 
-          description: "Great coffee and sandwiches!", 
-          image: [{url: "./images/featured-1.png", isPrimary: true}],
-          rating: {average: 4.5, count: 42}
-        },
-        { 
-          id: "b2", 
-          name: "123FASTFOOD", 
-          description: "Fast delivery and tasty burgers", 
-          image: [{url: "./images/featured-2.png", isPrimary: true}],
-          rating: {average: 4.2, count: 31}
-        },
-        { 
-          id: "b3", 
-          name: "CHRISTINA CAFE", 
-          description: "Best traditional food on campus", 
-          image: [{url: "./images/featured-3.png", isPrimary: true}],
-          rating: {average: 4.8, count: 56}
-        },
-        { 
-          id: "b4", 
-          name: "SLEEK DELIVERY", 
-          description: "Reliable delivery service", 
-          image: [{url: "./images/featured-4.png", isPrimary: true}],
-          rating: {average: 4.3, count: 28}
-        },
-        { 
-          id: "b5", 
-          name: "DESTA CAFE", 
-          description: "Perfect for quick lunches", 
-          image: [{url: "./images/featured-5.png", isPrimary: true}],
-          rating: {average: 4.0, count: 19}
-        },
-        { 
-          id: "b6", 
-          name: "DESTA CAFE", 
-          description: "Friendly staff and great prices", 
-          image: [{url: "./images/featured-1.png", isPrimary: true}],
-          rating: {average: 4.6, count: 47}
-        }
-      ];
+  // // Get businesses to display
+  // const businessesToDisplay = businesses.length > 0 
+  //   ? businesses.slice(0, 6)
+  //   : [
+  //       // Fallback static data if API returns nothing
+  //       { 
+  //         id: "b1", 
+  //         name: "DESTA CAFE", 
+  //         description: "Great coffee and sandwiches!", 
+  //         image: [{url: "./images/featured-1.png", isPrimary: true}],
+  //         rating: {average: 4.5, count: 42}
+  //       },
+  //       { 
+  //         id: "b2", 
+  //         name: "123FASTFOOD", 
+  //         description: "Fast delivery and tasty burgers", 
+  //         image: [{url: "./images/featured-2.png", isPrimary: true}],
+  //         rating: {average: 4.2, count: 31}
+  //       },
+  //       { 
+  //         id: "b3", 
+  //         name: "CHRISTINA CAFE", 
+  //         description: "Best traditional food on campus", 
+  //         image: [{url: "./images/featured-3.png", isPrimary: true}],
+  //         rating: {average: 4.8, count: 56}
+  //       },
+  //       { 
+  //         id: "b4", 
+  //         name: "SLEEK DELIVERY", 
+  //         description: "Reliable delivery service", 
+  //         image: [{url: "./images/featured-4.png", isPrimary: true}],
+  //         rating: {average: 4.3, count: 28}
+  //       },
+  //       { 
+  //         id: "b5", 
+  //         name: "DESTA CAFE", 
+  //         description: "Perfect for quick lunches", 
+  //         image: [{url: "./images/featured-5.png", isPrimary: true}],
+  //         rating: {average: 4.0, count: 19}
+  //       },
+  //       { 
+  //         id: "b6", 
+  //         name: "DESTA CAFE", 
+  //         description: "Friendly staff and great prices", 
+  //         image: [{url: "./images/featured-1.png", isPrimary: true}],
+  //         rating: {average: 4.6, count: 47}
+  //       }
+  //     ];
 
-  // Get reviews for each business
-  const getBusinessReview = (business, index) => {
-    // Try to find a review for this business
-    if (reviews.length > 0) {
-      const businessReview = reviews.find(review => review.businessId === business.id);
-      if (businessReview) {
-        return {
-          text: businessReview.body || businessReview.comment,
-          author: `- ${businessReview.userName || 'Student'}`,
-          rating: `⭐ ${businessReview.rating}`,
-          isReal: true
-        };
-      }
+  // // Get reviews for each business
+  // const getBusinessReview = (business, index) => {
+  //   // Try to find a review for this business
+  //   if (reviews.length > 0) {
+  //     const businessReview = reviews.find(review => review.businessId === business.id);
+  //     if (businessReview) {
+  //       return {
+  //         text: businessReview.body || businessReview.comment,
+  //         author: `- ${businessReview.userName || 'Student'}`,
+  //         rating: `⭐ ${businessReview.rating}`,
+  //         isReal: true
+  //       };
+  //     }
       
-      // If no specific review, use any review
-      const anyReview = reviews[index % reviews.length];
-      if (anyReview) {
-        return {
-          text: anyReview.body || anyReview.comment,
-          author: `- ${anyReview.userName || 'Student'}`,
-          rating: `⭐ ${anyReview.rating}`,
-          isReal: true
-        };
-      }
-    }
+  //     // If no specific review, use any review
+  //     const anyReview = reviews[index % reviews.length];
+  //     if (anyReview) {
+  //       return {
+  //         text: anyReview.body || anyReview.comment,
+  //         author: `- ${anyReview.userName || 'Student'}`,
+  //         rating: `⭐ ${anyReview.rating}`,
+  //         isReal: true
+  //       };
+  //     }
+  //   }
     
-    // Fallback static review
-    return {
-      text: "I ORDERED FROM HERE LAST WEEK - GOT MY ORDER IN 10 MINUTES! SUPER FAST AND FRIENDLY SERVICE.",
-      author: "- ANNA, 2ND YEAR",
-      rating: "⭐ 4.5",
-      isReal: false
-    };
-  };
+  //   // Fallback static review
+  //   return {
+  //     text: "I ORDERED FROM HERE LAST WEEK - GOT MY ORDER IN 10 MINUTES! SUPER FAST AND FRIENDLY SERVICE.",
+  //     author: "- ANNA, 2ND YEAR",
+  //     rating: "⭐ 4.5",
+  //     isReal: false
+  //   };
+  // };
 
   // Helper to get image URL from API structure
   const getImageUrl = (business) => {
-    if (business.image && business.image.length > 0) {
-      // Get primary image or first image
-      const primaryImage = business.image.find(img => img.isPrimary);
-      return primaryImage ? primaryImage.url : business.image[0].url;
+    if (business.images && business.images.length > 0) {
+      const primaryImage = business.images.find(img => img.isPrimary) || business.images[0];
+      return primaryImage.url;
     }
-    // Fallback based on index if no image
-    return "./images/default.png";
+    // Fallback to a placeholder if no image exists
+    return "https://via.placeholder.com/400x300?text=Gebeta+Food";
   };
 
   // Helper to get rating from API structure
@@ -249,19 +250,21 @@ const Home = () => {
         <h2 className="section-title">FEATURED BUSINESSES</h2>
         
         {loading ? (
-          <div style={{textAlign: 'center', padding: '40px', color: 'var(--text-color)'}}>
-            Loading featured businesses...
-          </div>
+          <div className="loading-state">Finding the best AAU eats...</div>
         ) : error ? (
-          <div style={{textAlign: 'center', padding: '40px', color: '#ff4444'}}>
-            Error loading businesses. Please make sure JSON Server is running on port 3000.
+          <div className="error-state">
+            <p>{error}</p>
+            <Button onClick={fetchData} variant="outline">Try Again</Button>
           </div>
-        ) : (
+        ): (
           <div className="businesses-grid">
             {businessesToDisplay.map((business, index) => {
-              const review = getBusinessReview(business, index);
-              const imageUrl = getImageUrl(business);
-              const rating = getRating(business);
+              // Match reviews to businesses or fallback
+              const businessReview = reviews.find(r => r.businessId === business._id) || reviews[index % reviews.length];
+              const imageUrl = business.images && business.images.length > 0 ? business.images[0].url : `./images/featured-${(index % 5) + 1}.png`;
+              const rating = businessReview.rating || 0;
+              const reviewText = businessReview.text || "No reviews available";
+              const reviewAuthor = businessReview.author || "Anonymous";
               
               return (
                 <div key={business.id || index} className="business-card">
@@ -276,10 +279,10 @@ const Home = () => {
                     <h3 className="business-overlay-title">{business.name.toUpperCase()}</h3>
                   </div>
                   <p className="business-review">
-                    "{review.text.substring(0, 100)}{review.text.length > 100 ? '...' : ''}"
+                    "{reviewText.substring(0, 100)}{reviewText.length > 100 ? '...' : ''}"
                   </p>
                   <p className="review-author">
-                    {review.rating} • {review.author}
+                    {rating} • {reviewAuthor}
                   </p>
                   <Button variant="outline">See More</Button>
                 </div>
