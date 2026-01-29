@@ -31,6 +31,18 @@ const userSchema = new mongoose.Schema(
     yearOfStudy: {
       type: String,
     },
+    description: {
+      type: String,
+      default: "",
+    },
+    followers:{
+      type: String,
+      default: "",
+    },
+    following:{
+      type: String,
+      default: "",
+    },
 
     //roles and status
     role: {

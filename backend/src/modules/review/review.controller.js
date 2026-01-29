@@ -89,3 +89,21 @@ export const updateReview = async (req, res) => {
     }
 };
 
+// @desc Get reviews by user ID
+// @route GET /api/reviews/user/:userId
+export const getReviewsByUserId = async (req, res) => {
+    try {
+        const { userId } = req.params;
+
+        const reviews = await Review.find({ user: userId })
+            .populate("business", "name category location") // Populate business details
+            .sort("-createdAt"); // Newest first
+
+        const response = new ApiResponse(200, reviews, "User reviews fetched successfully");
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify(response));
+    } catch (error) {
+        throw new ApiError(500, "Failed to fetch user reviews");
+    }
+};
+

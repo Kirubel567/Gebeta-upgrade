@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Button from '../../components/Button/Button';
 import './UserProfile.css';
+import { businessService, reviewService, authService } from '../../api/apiService';
 
 const UserProfile = () => {
   const [user, setUser] = useState(null);
@@ -33,85 +34,166 @@ const UserProfile = () => {
     'default': 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=800&auto=format&fit=crop'
   };
 
-  // Fetch user data from your db.json
+  // Fetch user data from API - SAFE FETCH WITH DEBUG LOGGING
   useEffect(() => {
     const fetchUserData = async () => {
+      console.log('🚀 [UserProfile] Starting data fetch...');
+
       try {
-        // Fetch from db.json
-        const response = await fetch('/db.json');
-        const data = await response.json();
-        
-        // Get the current user (Anna from your db.json)
-        const currentUser = data.users.find(u => u.id === 'u1') || {
-          id: 'u1',
-          name: 'Anna',
-          avatar: 'https://i.pravatar.cc/150?img=1',
-          email: 'student1@aau.edu.et',
-          role: 'user',
-          university: 'AAU',
-          dormitory: '5K',
-          yearOfStudy: '2nd Year',
-          followers: 128,
-          following: 56
-        };
-        
+        setLoading(true);
+
+        // ============================================
+        // STAGE 1: Fetch User Profile
+        // ============================================
+        console.log('📡 [Stage 1] Fetching user profile...');
+
+        // ❌ OLD (WRONG): const profileResponse = await authService.getProfile();
+        // ❌ OLD (WRONG): const profileData = await profileResponse.json();
+
+        // ✅ NEW (CORRECT): apiClient already returns parsed JSON
+        const profileData = await authService.getProfile();
+
+        console.log('✅ [Stage 1] Raw profile response:', profileData);
+        console.log('   - success:', profileData.success);
+        console.log('   - statusCode:', profileData.statusCode);
+        console.log('   - data type:', typeof profileData.data);
+
+        if (!profileData.success) {
+          throw new Error(profileData.message || 'Failed to fetch profile');
+        }
+
+        const currentUser = profileData.data;
+        console.log('👤 [Stage 1] Current user extracted:', {
+          _id: currentUser._id,
+          name: currentUser.name,
+          email: currentUser.email,
+          dormitory: currentUser.dormitory,
+          description: currentUser.description,
+          followers: currentUser.followers,
+          following: currentUser.following
+        });
+
         // Set user with location from dormitory
         const userWithLocation = {
           ...currentUser,
-          location: `${currentUser.dormitory} Dormitory, ${currentUser.university}`,
-          description: 'Food enthusiast & coffee lover. Always exploring new campus spots!',
-          followers: currentUser.followers || 128,
-          following: currentUser.following || 56
+          location: `${currentUser.dormitory || 'Main'} Dormitory, ${currentUser.university || 'AAU'}`,
+          role: currentUser.role || 'user',
+          isVerified: currentUser.isVerified || false,
+          description: currentUser.description || 'Food enthusiast & coffee lover. Always exploring new campus spots!',
+          followers: currentUser.followers || 0,
+          following: currentUser.following || 0,
         };
-        
+
+        console.log('🏠 [Stage 1] User with location:', userWithLocation);
+
         setUser(userWithLocation);
         setEditedUser({
           name: userWithLocation.name,
           location: userWithLocation.location,
           description: userWithLocation.description,
-          avatar: userWithLocation.avatar
+          avatar: userWithLocation.avatar || 'https://i.pravatar.cc/150?img=1'
         });
-        setAvatarPreview(userWithLocation.avatar);
-        
-        // Get user's reviews from db.json (Anna's reviews - she has review r1)
-        const userReviews = data.reviews
-          .filter(review => review.userId === 'u1')
-          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-        
-        // Enrich reviews with business info from db.json
-        const enrichedReviews = userReviews.map((review) => {
-          const business = data.businesses.find(b => b.id === review.businessId);
-          const menuItem = data.menu.find(m => m.businessId === review.businessId);
-          const foodName = menuItem?.itemName || 'Special Dish';
-          
-          return {
-            id: review.id,
+        setAvatarPreview(userWithLocation.avatar || 'https://i.pravatar.cc/150?img=1');
+
+        console.log('✅ [Stage 1] User state updated successfully');
+
+        // ============================================
+        // STAGE 2: Fetch User's Reviews
+        // ============================================
+        console.log('📡 [Stage 2] Fetching reviews for user ID:', currentUser._id);
+
+        // ✅ CORRECT: apiClient already returns parsed JSON
+        const reviewsData = await reviewService.getByUserId(currentUser._id);
+
+        console.log('✅ [Stage 2] Raw reviews response:', reviewsData);
+        console.log('   - success:', reviewsData.success);
+        console.log('   - statusCode:', reviewsData.statusCode);
+        console.log('   - data type:', typeof reviewsData.data);
+        console.log('   - data is array:', Array.isArray(reviewsData.data));
+        console.log('   - review count:', reviewsData.data?.length || 0);
+
+        if (!reviewsData.success) {
+          throw new Error(reviewsData.message || 'Failed to fetch reviews');
+        }
+
+        const userReviews = reviewsData.data || [];
+        console.log('📝 [Stage 2] User reviews array:', userReviews);
+
+        if (userReviews.length > 0) {
+          console.log('📝 [Stage 2] First review sample:', {
+            _id: userReviews[0]._id,
+            rating: userReviews[0].rating,
+            body: userReviews[0].body?.substring(0, 50) + '...',
+            business: userReviews[0].business,
+            user: userReviews[0].user,
+            createdAt: userReviews[0].createdAt
+          });
+        } else {
+          console.log('⚠️ [Stage 2] No reviews found for this user');
+        }
+
+        // ============================================
+        // STAGE 3: Enrich Reviews with Business Info
+        // ============================================
+        console.log('🔄 [Stage 3] Enriching reviews with business data...');
+
+        // The backend already populates the business field, so we don't need to fetch all businesses
+        // unless the population failed
+        const enrichedReviews = userReviews.map((review, index) => {
+          console.log(`   [Review ${index + 1}/${userReviews.length}] Processing:`, {
+            reviewId: review._id,
+            businessPopulated: !!review.business,
+            businessData: review.business
+          });
+
+          // The backend populates 'business' field with { _id, name, category, location }
+          const businessInfo = review.business || {};
+
+          // Get food name from business name or use default
+          const foodName = businessInfo.name || 'Special Dish';
+
+          const enriched = {
+            id: review._id,
             rating: review.rating,
             body: review.body,
             createdAt: review.createdAt,
             helpfulCount: review.helpfulCount || 0,
             business: {
-              name: business?.name || 'Unknown Restaurant',
-              category: business?.category,
-              location: business?.location?.address,
+              name: businessInfo.name || 'Unknown Restaurant',
+              category: businessInfo.category,
+              location: businessInfo.location?.address || businessInfo.location || 'Unknown Location',
             },
             food: {
               name: foodName,
-              price: menuItem?.price,
-              currency: menuItem?.currency,
-              image: foodImages[foodName] || foodImages.default
+              price: null, // Menu items are separate
+              currency: 'ETB',
+              image: foodImages[foodName] || foodImages[foodName.toUpperCase()] || foodImages.default
             }
           };
+
+          console.log(`   ✅ [Review ${index + 1}] Enriched:`, {
+            id: enriched.id,
+            businessName: enriched.business.name,
+            foodName: enriched.food.name,
+            imageFound: !!enriched.food.image
+          });
+
+          return enriched;
         });
-        
-        // If user has no reviews, show some mock reviews for demonstration
+
+        console.log('✅ [Stage 3] All reviews enriched. Total:', enrichedReviews.length);
+
+        // ============================================
+        // STAGE 4: Set Reviews State
+        // ============================================
         if (enrichedReviews.length === 0) {
+          console.log('⚠️ [Stage 4] No reviews - using mock data for demonstration');
           setRecentReviews([
             {
-              id: 'r1',
+              id: 'mock-r1',
               rating: 4.5,
               body: 'I ORDERED FROM HERE LAST WEEK - GOT MY ORDER IN 10 MINUTES! SUPER FAST AND FRIENDLY SERVICE.',
-              createdAt: '2024-12-15T10:30:00Z',
+              createdAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
               helpfulCount: 12,
               business: {
                 name: 'DESTA CAFE',
@@ -126,10 +208,10 @@ const UserProfile = () => {
               }
             },
             {
-              id: 'r2',
+              id: 'mock-r2',
               rating: 4.8,
               body: 'Best traditional Ethiopian food on campus! Authentic flavors and great prices.',
-              createdAt: '2024-12-14T14:20:00Z',
+              createdAt: new Date(Date.now() - 16 * 24 * 60 * 60 * 1000).toISOString(),
               helpfulCount: 8,
               business: {
                 name: 'CHRISTINA CAFE',
@@ -144,10 +226,10 @@ const UserProfile = () => {
               }
             },
             {
-              id: 'r3',
+              id: 'mock-r3',
               rating: 4.2,
               body: 'Good coffee but sometimes too crowded during lunch hours.',
-              createdAt: '2024-12-11T11:20:00Z',
+              createdAt: new Date(Date.now() - 19 * 24 * 60 * 60 * 1000).toISOString(),
               helpfulCount: 3,
               business: {
                 name: 'DESTA CAFE',
@@ -162,10 +244,10 @@ const UserProfile = () => {
               }
             },
             {
-              id: 'r4',
+              id: 'mock-r4',
               rating: 4.6,
               body: 'Amazing pizza with fresh toppings! Perfect for group hangouts.',
-              createdAt: '2024-12-10T19:30:00Z',
+              createdAt: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString(),
               helpfulCount: 15,
               business: {
                 name: 'RED SEA RESTAURANT',
@@ -181,26 +263,35 @@ const UserProfile = () => {
             },
           ]);
         } else {
+          console.log('✅ [Stage 4] Setting enriched reviews to state');
           setRecentReviews(enrichedReviews);
         }
-        
+
+        console.log('🎉 [UserProfile] Data fetch completed successfully!');
+
       } catch (error) {
-        console.error('Error fetching user data:', error);
+        console.error('❌ [UserProfile] ERROR during data fetch:', error);
+        console.error('   - Error name:', error.name);
+        console.error('   - Error message:', error.message);
+        console.error('   - Error stack:', error.stack);
+
         // Fallback mock data
+        console.log('🔄 [UserProfile] Loading fallback data...');
+
         const fallbackUser = {
-          id: 'u1',
-          name: 'Anna',
+          id: 'fallback-u1',
+          name: 'Guest User',
           avatar: 'https://i.pravatar.cc/150?img=1',
           location: '5K Dormitory, AAU',
           description: 'Food enthusiast & coffee lover. Always exploring new campus spots!',
-          followers: 128,
-          following: 56,
-          email: 'student1@aau.edu.et',
+          followers: 0,
+          following: 0,
+          email: 'guest@aau.edu.et',
           university: 'AAU',
           dormitory: '5K',
           yearOfStudy: '2nd Year'
         };
-        
+
         setUser(fallbackUser);
         setEditedUser({
           name: fallbackUser.name,
@@ -209,13 +300,13 @@ const UserProfile = () => {
           avatar: fallbackUser.avatar
         });
         setAvatarPreview(fallbackUser.avatar);
-        
+
         setRecentReviews([
           {
-            id: 'r1',
+            id: 'fallback-r1',
             rating: 4.5,
             body: 'I ORDERED FROM HERE LAST WEEK - GOT MY ORDER IN 10 MINUTES! SUPER FAST AND FRIENDLY SERVICE.',
-            createdAt: '2024-12-15T10:30:00Z',
+            createdAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
             helpfulCount: 12,
             business: {
               name: 'DESTA CAFE',
@@ -230,10 +321,10 @@ const UserProfile = () => {
             }
           },
           {
-            id: 'r2',
+            id: 'fallback-r2',
             rating: 4.8,
             body: 'Best traditional Ethiopian food on campus! Authentic flavors and great prices.',
-            createdAt: '2024-12-14T14:20:00Z',
+            createdAt: new Date(Date.now() - 16 * 24 * 60 * 60 * 1000).toISOString(),
             helpfulCount: 8,
             business: {
               name: 'CHRISTINA CAFE',
@@ -248,10 +339,10 @@ const UserProfile = () => {
             }
           },
           {
-            id: 'r3',
+            id: 'fallback-r3',
             rating: 4.2,
             body: 'Good coffee but sometimes too crowded during lunch hours.',
-            createdAt: '2024-12-11T11:20:00Z',
+            createdAt: new Date(Date.now() - 19 * 24 * 60 * 60 * 1000).toISOString(),
             helpfulCount: 3,
             business: {
               name: 'DESTA CAFE',
@@ -266,10 +357,10 @@ const UserProfile = () => {
             }
           },
           {
-            id: 'r4',
+            id: 'fallback-r4',
             rating: 4.6,
             body: 'Amazing pizza with fresh toppings! Perfect for group hangouts.',
-            createdAt: '2024-12-10T19:30:00Z',
+            createdAt: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString(),
             helpfulCount: 15,
             business: {
               name: 'RED SEA RESTAURANT',
@@ -284,13 +375,17 @@ const UserProfile = () => {
             }
           },
         ]);
+
+        console.log('✅ [UserProfile] Fallback data loaded');
       } finally {
         setLoading(false);
+        console.log('🏁 [UserProfile] Loading state set to false');
       }
     };
 
     fetchUserData();
   }, []);
+
 
   // Handle edit profile
   const handleEditProfile = () => {
@@ -298,19 +393,48 @@ const UserProfile = () => {
   };
 
   // Handle save changes
-  const handleSaveChanges = () => {
-    const updatedUser = {
-      ...user,
-      name: editedUser.name,
-      location: editedUser.location,
-      description: editedUser.description,
-      avatar: editedUser.avatar
-    };
-    
-    setUser(updatedUser);
-    setIsEditing(false);
-    alert('Profile updated successfully!');
+  const handleSaveChanges = async () => {
+    try {
+      console.log('💾 [UserProfile] Saving profile changes...');
+
+      // Prepare update data - only send fields that can be updated
+      const updateData = {
+        name: editedUser.name,
+        description: editedUser.description,
+        avatar: editedUser.avatar,
+      };
+
+      console.log('📤 [UserProfile] Update data:', updateData);
+
+      // Call the API to update profile
+      // ✅ CORRECT: apiClient already returns parsed JSON
+      const data = await authService.updateProfile(updateData);
+
+      console.log('✅ [UserProfile] Profile update response:', data);
+
+      if (!data.success) {
+        throw new Error(data.message || 'Failed to update profile');
+      }
+
+      // Update local state with the response data
+      const updatedUser = {
+        ...user,
+        ...data.data,
+        location: editedUser.location, // Keep the formatted location
+      };
+
+      console.log('✅ [UserProfile] Updated user state:', updatedUser);
+
+      setUser(updatedUser);
+      setIsEditing(false);
+      alert('Profile updated successfully!');
+    } catch (error) {
+      console.error('❌ [UserProfile] Error updating profile:', error);
+      alert('Failed to update profile. Please try again.');
+    }
   };
+
+
 
   // Handle cancel edit
   const handleCancelEdit = () => {
@@ -342,13 +466,13 @@ const UserProfile = () => {
         alert('Please select an image file (JPEG, PNG, etc.)');
         return;
       }
-      
+
       // Check file size (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
         alert('Image size should be less than 5MB');
         return;
       }
-      
+
       const reader = new FileReader();
       reader.onloadend = () => {
         const avatarUrl = reader.result;
@@ -373,13 +497,13 @@ const UserProfile = () => {
     const now = new Date();
     const diffTime = Math.abs(now - date);
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
+
     if (diffDays === 1) return 'Yesterday';
     if (diffDays < 7) return `${diffDays} days ago`;
     if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
-    
-    return date.toLocaleDateString('en-US', { 
-      month: 'short', 
+
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
       day: 'numeric',
       year: 'numeric'
     });
@@ -411,15 +535,15 @@ const UserProfile = () => {
                   <i className="fa-solid fa-pen-to-square"></i>
                   Edit Profile
                 </h3>
-                
+
                 {/* Avatar Upload from Computer */}
                 <div className="avatar-upload-section">
                   <p className="section-label">Upload Avatar:</p>
                   <div className="avatar-upload-container">
                     <div className="avatar-preview">
-                      <img 
-                        src={avatarPreview} 
-                        alt="Avatar Preview" 
+                      <img
+                        src={avatarPreview}
+                        alt="Avatar Preview"
                         className="preview-image"
                       />
                     </div>
@@ -509,13 +633,13 @@ const UserProfile = () => {
                 {/* Avatar and Name/Location in Flex Row */}
                 <div className="profile-header-flex">
                   <div className="profile-avatar-container">
-                    <img 
-                      src={user.avatar} 
+                    <img
+                      src={user.avatar}
                       alt={user.name}
                       className="profile-avatar"
                     />
                   </div>
-                  
+
                   <div className="profile-name-location">
                     <h1 className="profile-name">{user.name}</h1>
                     <div className="profile-location">
@@ -524,14 +648,21 @@ const UserProfile = () => {
                     </div>
                   </div>
                 </div>
-                
+
                 {/* Small Description - On separate line */}
                 <p className="profile-description">
                   {user.description}
                 </p>
-                
+
                 {/* User Stats with Icons */}
                 <div className="profile-stats-vertical">
+                  <div className="stat-line">
+                    <div className="stat-label">
+                      <i className="fa-solid fa-user-group"></i>
+                      ROLE:
+                    </div>
+                    <div className="stat-value">{user.role || 'user'}</div>
+                  </div>
                   <div className="stat-line">
                     <div className="stat-label">
                       <i className="fa-solid fa-user-group"></i>
@@ -539,7 +670,7 @@ const UserProfile = () => {
                     </div>
                     <div className="stat-value">{user.followers || 0}</div>
                   </div>
-                  
+
                   <div className="stat-line">
                     <div className="stat-label">
                       <i className="fa-solid fa-user-plus"></i>
@@ -548,7 +679,7 @@ const UserProfile = () => {
                     <div className="stat-value">{user.following || 0}</div>
                   </div>
                 </div>
-                
+
                 {/* Edit Profile Button */}
                 <Button variant="primary" onClick={handleEditProfile}>
                   <i className="fa-solid fa-pen-to-square"></i>
@@ -566,7 +697,7 @@ const UserProfile = () => {
               <i className="fa-solid fa-star"></i>
               Recent Reviews
             </h2>
-            
+
             {displayedReviews.length > 0 ? (
               <>
                 {/* 2x2 Grid of Review Boxes */}
@@ -575,8 +706,8 @@ const UserProfile = () => {
                     <div key={review.id} className="review-box">
                       {/* Image taking 60% height */}
                       <div className="review-image-container">
-                        <img 
-                          src={review.food.image} 
+                        <img
+                          src={review.food.image}
                           alt={review.food.name}
                           className="review-food-image"
                         />
@@ -586,7 +717,7 @@ const UserProfile = () => {
                           {review.rating.toFixed(1)}
                         </div>
                       </div>
-                      
+
                       {/* Review Content */}
                       <div className="review-content">
                         <h3 className="food-name">{review.food.name}</h3>
@@ -603,7 +734,7 @@ const UserProfile = () => {
                     </div>
                   ))}
                 </div>
-                
+
                 {/* Load More Button */}
                 {hasMoreReviews && (
                   <div className="load-more-container">

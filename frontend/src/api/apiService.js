@@ -77,7 +77,7 @@ export const businessService = {
 
     delete: async (id) => {
         return apiClient(`/api/businesses/${id}`, { method: 'DELETE' });
-    }   
+    }
 };
 
 // ==========================================
@@ -127,6 +127,10 @@ export const reviewService = {
         return apiClient(`/api/reviews/${businessId}`, { method: 'GET' });
     },
 
+    getByUserId: async (userId) => {
+        return apiClient(`/api/reviews/user/${userId}`, { method: 'GET' });
+    },
+
     create: async (data) => {
         return apiClient('/api/reviews', {
             method: 'POST',
@@ -141,6 +145,7 @@ export const reviewService = {
         });
     },
 };
+
 
 // ==========================================
 // DELIVERY SERVICES

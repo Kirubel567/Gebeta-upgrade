@@ -21,4 +21,10 @@ export const registerReviewRoutes = (app) => {
         "/api/reviews/:reviewId",
         applyMiddleware(authMiddleware, ReviewController.updateReview)
     );
+
+    // Get Reviews by User ID (Public)
+    app.get(
+        "/api/reviews/user/:userId",
+        asyncHandler(ReviewController.getReviewsByUserId)
+    );
 };

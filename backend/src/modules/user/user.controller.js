@@ -127,7 +127,8 @@ export const updateProfile = async (req, res) => {
         "university",
         "dormitory",
         "yearOfStudy",
-        "avatar"
+        "avatar",
+        "description"
     ];
 
     const updates = {};
