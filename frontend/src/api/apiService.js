@@ -44,7 +44,7 @@ export const businessService = {
         return apiClient(`/api/businesses?${query}`, { method: 'GET' });
     },
 
-    getFeatured: async (limit = 6) => {
+    getFeatured: async () => {
         return apiClient(`/api/businesses/featured`, { method: 'GET' });
     },
 

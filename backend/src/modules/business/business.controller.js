@@ -1,6 +1,9 @@
 import Business from "../../models/Business.js";
 import { User } from "../../models/User.js";
 import mongoose from "mongoose";
+import { ApiResponse } from "../../utils/ApiResponse.js";
+import { ApiError } from "../../utils/ApiError.js";
+
 //@desc get all businesses with search and category filter
 //@route GET
 export const getAll = async (req, res) => {
@@ -34,22 +37,22 @@ export const getAll = async (req, res) => {
 
     const total = await Business.countDocuments(query);
 
+    // Use standardized ApiResponse format
+    const response = new ApiResponse(200, businesses, "Businesses fetched successfully", {
+      pagination: {
+        total,
+        page,
+        limit,
+        pages: Math.ceil(total / limit),
+      }
+    });
+
     res.writeHead(200, { "Content-Type": "application/json" });
-    res.end(
-      JSON.stringify({
-        data: businesses,
-        pagination: {
-          total,
-          page,
-          limit,
-          pages: Math.ceil(total / limit),
-        },
-      }),
-    );
+    res.end(JSON.stringify(response));
   } catch (err) {
     // This catches the "skip is not defined" error if it happens
     res.writeHead(500, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ error: err.message }));
+    res.end(JSON.stringify({ success: false, error: err.message }));
   }
 };
 
@@ -67,14 +70,15 @@ export const getById = async (req, res) => {
 
     if (!business) {
       res.writeHead(404, { "Content-Type": "application/json" });
-      return res.end(JSON.stringify({ message: "Not Found" }));
+      return res.end(JSON.stringify({ success: false, message: "Business not found" }));
     }
 
+    const response = new ApiResponse(200, business, "Business fetched successfully");
     res.writeHead(200, { "Content-Type": "application/json" });
-    res.end(JSON.stringify(business));
+    res.end(JSON.stringify(response));
   } catch (err) {
     res.writeHead(400, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ error: "Invalid ID" }));
+    res.end(JSON.stringify({ success: false, error: "Invalid ID" }));
   }
 };
 
@@ -86,11 +90,13 @@ export const getFeatured = async (req, res) => {
     const featured = await Business.find({ isFeatured: true })
       .sort({ "rating.average": -1 })
       .limit(5);
+
+    const response = new ApiResponse(200, featured, "Featured businesses fetched successfully");
     res.writeHead(200, { "Content-Type": "application/json" });
-    res.end(JSON.stringify(featured));
+    res.end(JSON.stringify(response));
   } catch (err) {
     res.writeHead(500, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ error: "Failed to fetch featured" }));
+    res.end(JSON.stringify({ success: false, error: "Failed to fetch featured" }));
   }
 };
 
@@ -100,11 +106,13 @@ export const getByCategory = async (req, res) => {
   try {
     const { category } = req.params;
     const businesses = await Business.find({ category });
+
+    const response = new ApiResponse(200, businesses, "Businesses by category fetched successfully");
     res.writeHead(200, { "Content-Type": "application/json" });
-    res.end(JSON.stringify(businesses));
+    res.end(JSON.stringify(response));
   } catch (err) {
     res.writeHead(500, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ error: "Categrory fetch failed" }));
+    res.end(JSON.stringify({ success: false, error: "Category fetch failed" }));
   }
 };
 //desc create a business list
@@ -125,11 +133,12 @@ export const create = async (req, res) => {
       await User.findByIdAndUpdate(req.user._id, { role: "business_owner" });
     }
 
+    const response = new ApiResponse(201, doc, "Business created successfully");
     res.writeHead(201, { "Content-Type": "application/json" });
-    res.end(JSON.stringify(doc));
+    res.end(JSON.stringify(response));
   } catch (err) {
     res.writeHead(500, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ error: err.message }));
+    res.end(JSON.stringify({ success: false, error: err.message }));
   }
 };
 
@@ -141,11 +150,12 @@ export const update = async (req, res) => {
     const data = req.body;
     const updated = await Business.findByIdAndUpdate(id, data, { new: true });
 
+    const response = new ApiResponse(200, updated, "Business updated successfully");
     res.writeHead(200, { "Content-Type": "application/json" });
-    res.end(JSON.stringify(updated));
+    res.end(JSON.stringify(response));
   } catch (err) {
     res.writeHead(500, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ error: "failed to update" }));
+    res.end(JSON.stringify({ success: false, error: "Failed to update" }));
   }
 };
 //@desc delete a business
@@ -155,10 +165,11 @@ export const remove = async (req, res) => {
     const { id } = req.params;
     const deleted = await Business.findByIdAndDelete(id);
 
+    const response = new ApiResponse(200, { deleted: true }, "Business deleted successfully");
     res.writeHead(200, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ message: "Deleted" }));
+    res.end(JSON.stringify(response));
   } catch (err) {
     res.writeHead(500, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ error: "failed to delete" }));
+    res.end(JSON.stringify({ success: false, error: "Failed to delete" }));
   }
 };

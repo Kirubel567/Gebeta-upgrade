@@ -19,22 +19,34 @@ const Home = () => {
     try {
       setLoading(true);
       setError(null);
-      // Fetch featured businesses AND reviews using API documentation structure
-      const [businessesResponse, reviewsResponse] = await Promise.all([
-        businessService.getAll({ limit: 6 }),
-        reviewService.getAll({ limit: 6 })
-      ]);
-      
-      if (!businessesResponse.ok || !reviewsResponse.ok) {
-        throw new Error('Failed to fetch data from server');
+
+      // 1. Fetch Businesses
+      const businessesResponse = await businessService.getAll({ limit: 6 });
+
+      // Axios/Standard Service check: 
+      // Most API services return { success: true, data: [...] }
+      if (!businessesResponse || !businessesResponse.data || businessesResponse.data.length === 0) {
+        setBusinesses([]);
+        setLoading(false);
+        return;
       }
-      
-      // Extract data from the standardized response { success: true, data: [...] }
-      setBusinesses(businessesResponse.data || []);
-      setReviews(reviewsResponse.data || []);
+
+      const fetchedBusinesses = businessesResponse.data;
+      setBusinesses(fetchedBusinesses);
+
+      // 2. Fetch Reviews 
+      // Use _id (standard for MongoDB) and add a safety check
+      const firstBusinessId = fetchedBusinesses[0]._id || fetchedBusinesses[0].id;
+
+      if (firstBusinessId) {
+        const reviewsResponse = await reviewService.getByBusinessId(firstBusinessId);
+        setReviews(reviewsResponse.data || []);
+      }
+
     } catch (err) {
+      // This catches 404s, 500s, and Network Errors
       handleApiError(err, setError);
-      console.error('Error fetching Gebeta data:', err);
+      console.error('Gebeta Fetch Error:', err);
     } finally {
       setLoading(false);
     }
@@ -102,7 +114,7 @@ const Home = () => {
   //         isReal: true
   //       };
   //     }
-      
+
   //     // If no specific review, use any review
   //     const anyReview = reviews[index % reviews.length];
   //     if (anyReview) {
@@ -114,7 +126,7 @@ const Home = () => {
   //       };
   //     }
   //   }
-    
+
   //   // Fallback static review
   //   return {
   //     text: "I ORDERED FROM HERE LAST WEEK - GOT MY ORDER IN 10 MINUTES! SUPER FAST AND FRIENDLY SERVICE.",
@@ -146,81 +158,81 @@ const Home = () => {
     <div className="home-page">
       {/* Hero Section */}
       {/* Hero Section */}
-<section style={{
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  padding: '60px 5%',
-  minHeight: '80vh',
-  maxWidth: '1200px',
-  margin: '0 auto',
-  gap: '60px',
-  backgroundColor: '#050A30',
-  flexDirection: 'row'
-}}>
-  {/* Image on LEFT */}
-  <div style={{
-    flex: 1,
-    maxWidth: '50%',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center'
-  }}>
-    <img 
-      src="https://plus.unsplash.com/premium_photo-1676738356307-bc7d58a914a5?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHx2aXN1YWwtc2VhcmNofDF8fHxlbnwwfHx8fHw%3D" 
-      alt="Delicious campus food"
-      style={{
-        width: '100%',
-        maxWidth: '500px',
-        height: '400px',
-        borderRadius: '40px',
-        boxShadow: '0 20px 40px rgba(0,0,0,0.3)'
-      }}
-    />
-  </div>
-  
-  {/* Content on RIGHT */}
-  <div style={{
-    flex: 1,
-    maxWidth: '50%'
-  }}>
-    <h1 style={{
-      fontFamily: "'Poppins', sans-serif",
-      fontSize: '40px',
-      fontWeight: '800',
-      lineHeight: '1.2',
-      marginBottom: '20px',
-      color: '#ffffff'
-    }}>
-      DISCOVER THE BEST<br />EATS IN & AROUND<br />CAMPUS
-    </h1>
-    <p style={{
-      fontFamily: "'Roboto', sans-serif",
-      fontSize: '18px',
-      color: '#cccccc',
-      marginBottom: '40px',
-      maxWidth: '500px'
-    }}>
-      From hidden cafeteria gems to top-rated street spots and student-run delivery
-      startups, explore every bite your university has to offer.
-    </p>
-    <div style={{ display: 'flex', gap: '20px' }}>
-  <Link to="/reviews">
-    <Button variant="primary">Explore</Button>
-  </Link>
-  <Link to="/submit-review">
-    <Button variant="outline">Rate</Button>
-  </Link>
-</div>
-  </div>
-</section>
-<hr style={{
-  border: 'none',
-  height: '1px',
-  backgroundColor: 'rgba(255, 255, 255, 0.1)',
-  margin: '0'
-}} />
-<hr className="divider" />
+      <section style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '60px 5%',
+        minHeight: '80vh',
+        maxWidth: '1200px',
+        margin: '0 auto',
+        gap: '60px',
+        backgroundColor: '#050A30',
+        flexDirection: 'row'
+      }}>
+        {/* Image on LEFT */}
+        <div style={{
+          flex: 1,
+          maxWidth: '50%',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}>
+          <img
+            src="https://plus.unsplash.com/premium_photo-1676738356307-bc7d58a914a5?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHx2aXN1YWwtc2VhcmNofDF8fHxlbnwwfHx8fHw%3D"
+            alt="Delicious campus food"
+            style={{
+              width: '100%',
+              maxWidth: '500px',
+              height: '400px',
+              borderRadius: '40px',
+              boxShadow: '0 20px 40px rgba(0,0,0,0.3)'
+            }}
+          />
+        </div>
+
+        {/* Content on RIGHT */}
+        <div style={{
+          flex: 1,
+          maxWidth: '50%'
+        }}>
+          <h1 style={{
+            fontFamily: "'Poppins', sans-serif",
+            fontSize: '40px',
+            fontWeight: '800',
+            lineHeight: '1.2',
+            marginBottom: '20px',
+            color: '#ffffff'
+          }}>
+            DISCOVER THE BEST<br />EATS IN & AROUND<br />CAMPUS
+          </h1>
+          <p style={{
+            fontFamily: "'Roboto', sans-serif",
+            fontSize: '18px',
+            color: '#cccccc',
+            marginBottom: '40px',
+            maxWidth: '500px'
+          }}>
+            From hidden cafeteria gems to top-rated street spots and student-run delivery
+            startups, explore every bite your university has to offer.
+          </p>
+          <div style={{ display: 'flex', gap: '20px' }}>
+            <Link to="/reviews">
+              <Button variant="primary">Explore</Button>
+            </Link>
+            <Link to="/submit-review">
+              <Button variant="outline">Rate</Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+      <hr style={{
+        border: 'none',
+        height: '1px',
+        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+        margin: '0'
+      }} />
+      <hr className="divider" />
 
       {/* Features Section */}
       <section className="features-section">
@@ -248,7 +260,7 @@ const Home = () => {
       {/* Featured Businesses Section */}
       <section className="featured-businesses">
         <h2 className="section-title">FEATURED BUSINESSES</h2>
-        
+
         {loading ? (
           <div className="loading-state">Finding the best AAU eats...</div>
         ) : error ? (
@@ -256,25 +268,32 @@ const Home = () => {
             <p>{error}</p>
             <Button onClick={fetchData} variant="outline">Try Again</Button>
           </div>
-        ): (
+        ) : businesses.length === 0 ? (
+          <div className="error-state">
+            <p>No businesses found. Check back soon!</p>
+          </div>
+        ) : (
           <div className="businesses-grid">
-            {businessesToDisplay.map((business, index) => {
+            {businesses.slice(0, 6).map((business, index) => {
               // Match reviews to businesses or fallback
-              const businessReview = reviews.find(r => r.businessId === business._id) || reviews[index % reviews.length];
-              const imageUrl = business.images && business.images.length > 0 ? business.images[0].url : `./images/featured-${(index % 5) + 1}.png`;
-              const rating = businessReview.rating || 0;
-              const reviewText = businessReview.text || "No reviews available";
-              const reviewAuthor = businessReview.author || "Anonymous";
-              
+              const businessReview = reviews.find(r => r.business === business._id) || reviews[index % Math.max(reviews.length, 1)];
+              const imageUrl = business.images && business.images.length > 0
+                ? business.images[0].url
+                : `./images/featured-${(index % 5) + 1}.png`;
+              const rating = businessReview?.rating || business.rating?.average || 0;
+              const reviewText = businessReview?.body || "No reviews available";
+              const reviewAuthor = businessReview?.user?.name || "Anonymous";
+
               return (
-                <div key={business.id || index} className="business-card">
+                <div key={business._id || index} className="business-card">
                   <div className="business-image-wrapper">
-                    <img 
-                      src={imageUrl} 
-                      alt={business.name} 
+                    <img
+                      src={imageUrl}
+                      alt={business.name}
                       onError={(e) => {
                         e.target.src = `./images/featured-${(index % 5) + 1}.png`;
                       }}
+                      style={{ width: '100%', height: '160px', objectFit: 'cover' }}
                     />
                     <h3 className="business-overlay-title">{business.name.toUpperCase()}</h3>
                   </div>
@@ -282,9 +301,11 @@ const Home = () => {
                     "{reviewText.substring(0, 100)}{reviewText.length > 100 ? '...' : ''}"
                   </p>
                   <p className="review-author">
-                    {rating} • {reviewAuthor}
+                    ⭐ {rating} • {reviewAuthor}
                   </p>
-                  <Button variant="outline">See More</Button>
+                  <Link to={`/business/${business._id}`}>
+                    <Button variant="outline">See More</Button>
+                  </Link>
                 </div>
               );
             })}
