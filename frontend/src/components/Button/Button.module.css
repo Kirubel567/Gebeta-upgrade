@@ -1,0 +1,120 @@
+.button {
+  display: inline-block;
+  border: 2px solid transparent;
+  border-radius: var(--border-radius-btn);
+  font-family: var(--font-script);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+/* Variants */
+.primary {
+  background-color: var(--color-primary);
+  color: var(--text-white);
+  border-color: var(--color-primary);
+}
+
+.primary:hover:not(.disabled) {
+  background-color: #32e00e;
+  transform: scale(1.05);
+}
+
+.secondary {
+  background-color: var(--color-secondary);
+  color: var(--text-white);
+  border-color: var(--color-secondary);
+}
+
+.secondary:hover:not(.disabled) {
+  background-color: #3a3a6a;
+  transform: scale(1.05);
+}
+
+.success {
+  background-color: var(--color-success);
+  color: var(--text-white);
+  border-color: var(--color-success);
+}
+
+.success:hover:not(.disabled) {
+  background-color: #32e00e;
+  transform: scale(1.05);
+}
+
+.danger {
+  background-color: var(--color-danger);
+  color: var(--text-white);
+  border-color: var(--color-danger);
+}
+
+.danger:hover:not(.disabled) {
+  background-color: #e63939;
+  transform: scale(1.05);
+}
+
+.warning {
+  background-color: var(--color-warning);
+  color: var(--primary-bg);
+  border-color: var(--color-warning);
+}
+
+.warning:hover:not(.disabled) {
+  background-color: #e69900;
+  transform: scale(1.05);
+}
+
+.neutral {
+  background-color: var(--color-neutral);
+  color: var(--primary-bg);
+  border-color: var(--color-neutral);
+}
+
+.neutral:hover:not(.disabled) {
+  background-color: #b3b3b3;
+  transform: scale(1.05);
+}
+
+.outline {
+  background-color: transparent;
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.outline:hover:not(.disabled) {
+  background-color: var(--color-primary);
+  color: var(--text-white);
+  transform: scale(1.05);
+}
+
+/* Sizes */
+.small {
+  padding: 8px 20px;
+  font-size: 0.9rem;
+}
+
+.medium {
+  padding: 12px 28px;
+  font-size: 1rem;
+}
+
+.large {
+  padding: 16px 36px;
+  font-size: 1.2rem;
+}
+
+/* Disabled */
+.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.disabled:hover {
+  transform: none !important;
+}

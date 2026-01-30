@@ -1,0 +1,385 @@
+/* About Section */
+.about-section {
+    display: flex;
+    gap: 50px;
+    padding: 60px 5%;
+    max-width: var(--container-width);
+    margin: 0 auto;
+    align-items: center;
+}
+
+.about-text {
+    flex: 1;
+}
+
+.about-text h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 30px;
+    line-height: 1.2;
+}
+
+.about-gallery {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: 200px 150px;
+    gap: 15px;
+}
+
+.gallery-item {
+    background-size: cover;
+    background-position: center;
+    border-radius: 10px;
+    position: relative;
+}
+
+.gallery-item.large {
+    border-top-left-radius: 60px;
+}
+
+.gallery-item.wide {
+    grid-column: span 2;
+    border-bottom-left-radius: 60px;
+}
+
+.gallery-label {
+    position: absolute;
+    bottom: 10px;
+    right: 15px;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+/* Dashboard Section */
+.dashboard-section {
+    padding: 60px 5%;
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+    max-width: var(--container-width);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    font-family: var(--font-heading);
+    margin: 0;
+}
+
+.create-btn-container {
+    display: flex;
+    align-items: center;
+}
+
+/* Create Form Section */
+.create-form-section {
+    max-width: 800px;
+    margin: 0 auto 50px;
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Business Grid - Horizontal Layout */
+.business-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 30px;
+    width: 100%;
+    margin-top: 30px;
+    max-width: var(--container-width);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Business Card */
+.business-card {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--border-radius-card);
+    overflow: hidden;
+    border: 1px solid rgba(57, 255, 20, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.business-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    border-color: rgba(57, 255, 20, 0.3);
+}
+
+/* Image Container */
+.card-image-container {
+    height: 200px;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    background-color: #222;
+}
+
+.card-image {
+    width: 100% !important;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+    display: block;
+}
+
+.business-card:hover .card-image {
+    transform: scale(1.05);
+}
+
+/* Status Badge - Left Side */
+.status-badge {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    z-index: 2;
+}
+
+.status-badge.pending {
+    background-color: #ffc107;
+    color: #000;
+}
+
+.status-badge.approved {
+    background-color: var(--accent-green);
+    color: var(--primary-bg);
+}
+
+.status-badge.rejected {
+    background-color: #ff4757;
+    color: white;
+}
+
+/* Card Content */
+.card-content {
+    padding: 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-title {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    color: var(--text-white);
+    margin: 0 0 8px 0;
+    line-height: 1.3;
+}
+
+.card-category {
+    color: var(--accent-green);
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin: 0 0 12px 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-transform: uppercase;
+}
+
+.card-description {
+    color: var(--text-grey);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin: 0 0 20px 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex: 1;
+}
+
+.card-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: auto;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-grey);
+    font-size: 0.85rem;
+}
+
+.meta-item i {
+    color: var(--accent-green);
+    width: 16px;
+    text-align: center;
+}
+
+/* Card Actions */
+.card-actions {
+    padding: 0;
+    background: rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: stretch;
+    gap: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.action-btn {
+    flex: 1;
+    padding: 15px;
+    border: none;
+    border-radius: 0;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: var(--font-heading);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.edit-btn {
+    background-color: transparent;
+    color: var(--accent-green);
+}
+
+.edit-btn:hover {
+    background-color: rgba(57, 255, 20, 0.1);
+    color: var(--accent-green);
+    box-shadow: none;
+}
+
+.delete-btn {
+    background-color: transparent;
+    color: #ff4757;
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.delete-btn:hover {
+    background-color: rgba(255, 71, 87, 0.1);
+    color: #ff4757;
+    box-shadow: none;
+}
+
+
+
+/* Edit Form Container - Outside Grid */
+.edit-form-wrapper {
+    max-width: 800px;
+    margin: 30px auto 50px;
+    border-left: 3px solid var(--accent-green);
+    padding-left: 20px;
+    animation: slideDown 0.3s ease-out;
+}
+
+/* Text utilities */
+.text-green {
+    color: var(--accent-green);
+}
+
+.script-font {
+    font-family: var(--font-logo);
+}
+
+.divider {
+    border: none;
+    border-top: 2px solid var(--accent-green);
+    margin: 40px auto;
+    max-width: var(--container-width);
+}
+
+/* Empty State */
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 20px;
+    border: 2px dashed rgba(255, 255, 255, 0.1);
+}
+
+.empty-state i {
+    font-size: 4rem;
+    color: rgba(255, 255, 255, 0.1);
+    margin-bottom: 20px;
+}
+
+.empty-state h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: var(--text-white);
+}
+
+.empty-state p {
+    color: var(--text-grey);
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .about-section {
+        flex-direction: column;
+        text-align: center;
+        gap: 30px;
+    }
+
+    .about-text h1 {
+        font-size: 2.5rem;
+    }
+
+    .about-gallery {
+        width: 100%;
+    }
+
+    .dashboard-header {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+    }
+
+    .business-grid {
+        grid-template-columns: 1fr;
+        margin-top: 20px;
+    }
+
+    .edit-form-wrapper {
+        padding-left: 0;
+        border-left: none;
+        border-top: 3px solid var(--accent-green);
+        padding-top: 20px;
+        margin: 20px auto;
+    }
+}

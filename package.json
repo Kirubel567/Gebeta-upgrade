@@ -1,6 +1,13 @@
 {
-  "dependencies": {
-    "dotenv": "^17.2.3",
-    "mongoose": "^9.1.2"
-  }
+    "name": "gebeta-upgrade-root",
+    "version": "1.0.0",
+    "description": "Root configuration for running full-stack Gebeta application",
+    "scripts": {
+        "backend": "npm run dev --prefix backend",
+        "frontend": "npm run dev --prefix frontend",
+        "dev": "concurrently --names \"BACKEND,FRONTEND\" --prefix-colors \"blue,green\" \"npm run backend\" \"npm run frontend\""
+    },
+    "devDependencies": {
+        "concurrently": "^9.1.2"
+    }
 }

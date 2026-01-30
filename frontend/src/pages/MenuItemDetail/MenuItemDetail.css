@@ -1,0 +1,679 @@
+/* MenuItemDetail.css - Centered Modal Style */
+
+/* ===== Modal Overlay ===== */
+.menu-item-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+/* ===== Modal Container ===== */
+.menu-item-modal-container {
+  width: 100%;
+  max-width: 850px; /* Slightly wider for better proportions */
+  max-height: 90vh; /* Prevents sticking to top/bottom */
+  background-color: var(--primary-bg);
+  border-radius: 20px;
+  overflow: hidden;
+
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Back Button - Left side */
+.modal-back-btn {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background: none;
+  border: none;
+  color: var(--text-white);
+  font-family: var(--font-main);
+  font-size: 0.8rem;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  z-index: 1001;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.modal-back-btn:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: var(--accent-green);
+}
+
+/* ===== Main Content Layout ===== */
+.menu-item-modal-content {
+  display: flex;
+  flex: 1; 
+  overflow: hidden;
+}
+
+/* ===== Left Section (Image - 60%) ===== */
+.modal-left-section {
+  flex: 1.5;
+  position: relative;
+  background-color: #000;
+  overflow: hidden;
+}
+
+.modal-large-image-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.modal-large-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.modal-food-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.95));
+  padding: 18px 22px;
+  color: var(--text-white);
+}
+
+.modal-food-basic {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.modal-food-basic h1 {
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  text-transform: uppercase;
+  margin: 0;
+  letter-spacing: 0.3px;
+}
+
+.modal-food-price {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: var(--accent-green);
+}
+
+.modal-food-rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-size: 0.7rem;
+}
+
+.modal-food-rating span {
+  font-size: 0.65rem;
+  color: var(--text-grey);
+}
+
+.modal-food-desc {
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: var(--text-white);
+  opacity: 0.9;
+  max-width: 90%;
+}
+
+/* ===== Right Section ===== */
+.modal-right-section {
+  flex: 1;
+  padding: 22px 20px;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--primary-bg);
+  overflow-y: auto;
+}
+
+/* Fix: Slimmer Review Prompt Box */
+.review-prompt-box {
+  margin-top: auto; /* Pushes to bottom */
+  padding: 15px;
+  background-color: rgba(255, 255, 255, 0.03);
+  /* border-radius: 12px; */
+  /* border: 1px dashed var(--accent-green); */
+  text-align: center;
+}
+.review-prompt-box h3 {
+  font-size: 0.85rem;
+  margin-bottom: 5px;
+  color: var(--text-white);
+}
+.review-prompt-box p {
+  font-size: 0.7rem;
+  margin-bottom: 10px;
+  color: var(--text-grey);
+}
+/* Fix: Specific Button Sizing */
+.review-prompt-box .btn-primary {
+  padding: 8px 20px;
+  font-size: 0.8rem;
+  height: auto; /* Resets any global height */
+  min-height: unset;
+  width: auto;
+  display: inline-block;
+}
+/* Food Navigation */
+.modal-food-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-food-title {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  color: var(--text-white);
+  margin: 0;
+  text-align: center;
+  flex-grow: 1;
+  letter-spacing: 0.3px;
+}
+
+.modal-nav-arrow {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--accent-green);
+  color: var(--accent-green);
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-nav-arrow:hover {
+  background-color: var(--accent-green);
+  color: var(--primary-bg);
+  transform: scale(1.1);
+}
+
+/* Small Photos Section */
+.modal-small-photos {
+  margin-bottom: 20px;
+}
+
+.modal-small-photos h3 {
+  font-family: var(--font-heading);
+  font-size: 0.7rem;
+  color: var(--text-white);
+  margin-bottom: 12px;
+  opacity: 0.9;
+}
+
+.modal-photos-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.modal-small-photo {
+  width: 100%;
+  height: 60px;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.modal-small-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.modal-small-photo:hover {
+  border-color: var(--accent-green);
+  transform: translateY(-2px);
+}
+
+/* Review Section */
+.modal-review-section {
+  margin-bottom: 20px;
+  flex-grow: 1;
+}
+
+.modal-review-heading {
+  font-family: var(--font-heading);
+  font-size: 0.9rem;
+  color: var(--text-white);
+  margin-bottom: 15px;
+  opacity: 0.9;
+}
+
+.modal-reviews-container {
+  max-height: 200px;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+/* Custom scrollbar for reviews */
+.modal-reviews-container::-webkit-scrollbar {
+  width: 4px;
+}
+
+.modal-reviews-container::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 2px;
+}
+
+.modal-reviews-container::-webkit-scrollbar-thumb {
+  background: var(--accent-green);
+  border-radius: 2px;
+}
+
+.modal-review-card {
+  background-color: rgba(255, 255, 255, 0.03);
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 10px;
+}
+
+.modal-review-card:last-child {
+  margin-bottom: 0;
+}
+
+.modal-reviewer-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.modal-reviewer-avatar {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--accent-green);
+}
+
+.modal-reviewer-details h4 {
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  color: var(--text-white);
+  margin: 0 0 2px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.modal-reviewer-details p {
+  font-size: 0.7rem;
+  color: var(--text-grey);
+  margin: 0 0 4px 0;
+}
+
+.modal-review-stars {
+  color: var(--accent-green);
+  font-size: 0.7rem;
+}
+
+.modal-review-text {
+  color: var(--text-grey);
+  line-height: 1.4;
+  font-size: 0.75rem;
+  margin-bottom: 8px;
+  font-style: italic;
+}
+
+.modal-review-date {
+  text-align: right;
+  font-size: 0.65rem;
+  color: var(--text-grey);
+  opacity: 0.7;
+}
+
+/* Action Buttons */
+.modal-action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-btn {
+  padding: 12px 15px;
+  border-radius: 8px;
+  border: none;
+  font-family: var(--font-main);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.modal-btn-primary {
+  background-color: var(--accent-green);
+  color: var(--primary-bg);
+}
+
+.modal-btn-primary:hover {
+  background-color: #45e620;
+  transform: translateY(-2px);
+}
+
+.modal-btn-outline {
+  background-color: transparent;
+  color: var(--accent-green);
+  border: 1px solid var(--accent-green);
+}
+
+.modal-btn-outline:hover {
+  background-color: var(--accent-green);
+  color: var(--primary-bg);
+}
+
+/* ===== Responsive Design ===== */
+@media (max-width: 1024px) {
+  .menu-item-modal-container {
+    max-width: 700px;
+  }
+  
+  .modal-food-basic h1 {
+    font-size: 1.2rem;
+  }
+  
+  .modal-food-price {
+    font-size: 1rem;
+  }
+  
+  .modal-food-title {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .menu-item-modal-overlay {
+    padding: 10px;
+  }
+  
+  .menu-item-modal-container {
+    max-width: 95%;
+    min-height: auto;
+  }
+  
+  .menu-item-modal-content {
+    flex-direction: column;
+    min-height: auto;
+  }
+  
+  .modal-left-section {
+    height: 250px;
+    flex: none;
+  }
+  
+  .modal-right-section {
+    padding: 20px;
+  }
+  
+  .modal-food-navigation {
+    margin-bottom: 20px;
+  }
+  
+  .modal-small-photo {
+    height: 70px;
+  }
+  
+  .modal-reviews-container {
+    max-height: 150px;
+  }
+}
+
+@media (max-width: 480px) {
+  .menu-item-modal-container {
+    border-radius: 15px;
+  }
+  
+  .modal-back-btn {
+    top: 10px;
+    left: 10px;
+    padding: 6px 10px;
+    font-size: 0.75rem;
+  }
+  
+  .modal-left-section {
+    height: 200px;
+  }
+  
+  .modal-food-overlay {
+    padding: 12px 15px;
+  }
+  
+  .modal-food-basic h1 {
+    font-size: 1rem;
+  }
+  
+  .modal-food-price {
+    font-size: 0.9rem;
+  }
+  
+  .modal-food-desc {
+    font-size: 0.7rem;
+  }
+  
+  .modal-right-section {
+    padding: 15px;
+  }
+  
+  .modal-food-title {
+    font-size: 0.9rem;
+  }
+  
+  .modal-nav-arrow {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .modal-small-photo {
+    height: 50px;
+  }
+  
+  .modal-reviews-container {
+    max-height: 120px;
+  }
+  
+  .modal-btn {
+    padding: 10px 12px;
+    font-size: 0.8rem;
+  }
+}
+
+/* Update the container to ensure it has a strict height on desktop */
+.menu-item-modal-container {
+  width: 100%;
+  max-width: 850px;
+  height: 80vh; /* Fixed height relative to viewport */
+  min-height: 500px; /* Ensures it doesn't get too squashed */
+  background-color: var(--primary-bg);
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+  display: flex; /* Added flex here */
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Ensure the content fills the container height */
+.menu-item-modal-content {
+  display: flex;
+  width: 100%;
+  height: 100%; /* Fill the container */
+}
+
+/* Fix Left Section Overlay */
+.modal-left-section {
+  flex: 1.5;
+  position: relative;
+  height: 100%;
+  background-color: #000;
+}
+
+.modal-large-image-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.modal-food-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10; /* Ensure it stays on top */
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.6) 70%, transparent 100%);
+  padding: 25px 22px; /* Increased padding for better legibility */
+  color: var(--text-white);
+}
+
+/* Fix Right Section and Review Button */
+.modal-right-section {
+  flex: 1;
+  height: 100%;
+  padding: 22px 20px;
+  display: flex;
+  flex-direction: column; /* Stacks children vertically */
+  background-color: var(--primary-bg);
+  overflow: hidden; /* Prevent the whole section from scrolling */
+}
+
+/* This allows the middle part (reviews) to scroll while the rest stays fixed */
+.modal-review-section {
+  flex: 1; /* Takes up all available middle space */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  margin-bottom: 15px;
+}
+
+.modal-reviews-container {
+  flex: 1;
+  overflow-y: auto; /* This is the ONLY part that scrolls */
+  padding-right: 8px;
+}
+
+/* Prompt Box - Pinned to bottom */
+.review-prompt-box {
+  flex-shrink: 0; /* Prevents the box from squishing */
+  padding: 15px;
+  background-color: rgba(255, 255, 255, 0.05);
+  /* border-radius: 12px; */
+  /* border: 1px dashed var(--accent-green); */
+  text-align: center;
+  margin-top: auto;
+}
+
+/* 1. Ensure the right section is a rigid flex container */
+.modal-right-section {
+  flex: 1;
+  height: 100%; /* Important: Must match the container height */
+  padding: 22px 20px;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--primary-bg);
+  overflow: hidden; /* Prevent the whole right side from scrolling */
+}
+
+/* 2. The review section should grow to fill space, but hide what doesn't fit */
+.modal-review-section {
+  flex: 1; 
+  display: flex;
+  flex-direction: column;
+  min-height: 0; /* Critical fix for flexbox overflow issues */
+  margin-bottom: 10px;
+}
+
+/* 3. The actual container that holds the list of review cards */
+.modal-reviews-container {
+  overflow-y: auto; /* Only this part scrolls */
+  padding-right: 5px;
+  /* Ensure it doesn't collapse */
+  flex: 1;
+}
+
+/* 4. The prompt box: No overlap, stays at the bottom */
+.review-prompt-box {
+  flex-shrink: 0; /* Prevents it from being squashed */
+  padding: 12px;
+  background-color: rgba(255, 255, 255, 0.05);
+  /* border-radius: 12px; */
+  /* border: 1px dashed var(--accent-green); */
+  text-align: center;
+  margin-top: 10px; /* Space between reviews and the box */
+  z-index: 5;
+}
+
+/* 5. Make the button smaller to save space */
+.review-prompt-box h3 {
+  font-size: 0.8rem;
+  margin-bottom: 2px;
+}
+.review-prompt-box p {
+  font-size: 0.65rem;
+  margin-bottom: 8px;
+}
+.review-prompt-box .btn-primary {
+  padding: 6px 15px;
+  font-size: 0.75rem;
+}
+
+/* Center the loading state perfectly */
+.modal-loading-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%; /* Take up the full overlay space */
+  color: var(--text-white);
+  gap: 15px;
+}
+
+/* Ensure the spinner looks right */
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  border-left-color: var(--accent-green);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

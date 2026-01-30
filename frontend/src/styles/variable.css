@@ -1,0 +1,28 @@
+:root {
+  /* Colors */
+  --primary-bg: #050a30;
+  --secondary-bg: #252953;
+  --accent-green: #39ff14;
+  --text-white: #ffffff;
+  --text-grey: #cccccc;
+
+  /* Button Colors */
+  --color-primary: #39ff14;
+  --color-secondary: #252953;
+  --color-success: #39ff14;
+  --color-danger: #ff4444;
+  --color-warning: #ffaa00;
+  --color-neutral: #cccccc;
+
+  /* Fonts */
+  --font-main: "Poppins", sans-serif;
+  --font-heading: "Poppins", sans-serif;
+  --font-script: "Pacifico", cursive;
+  --font-desc: "Roboto", sans-serif;
+
+  /* Spacing & Sizing */
+  --border-radius-btn: 54px;
+  --border-radius-card: 12px;
+  --container-width: 1200px;
+  --section-padding: 60px 5%;
+}

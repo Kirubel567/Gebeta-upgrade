@@ -1,0 +1,34 @@
+{
+  "/api/businesses": "/businesses",
+  "/api/businesses/:id": "/businesses/:id",
+  "/api/businesses/featured": "/businesses?isFeatured=true",
+  "/api/businesses/category/:category": "/businesses?category=:category",
+  
+  "/api/reviews": "/reviews",
+  "/api/reviews/:id": "/reviews/:id",
+  "/api/reviews/business/:businessId": "/reviews?businessId=:businessId",
+  "/api/reviews/recent": "/reviews?_sort=createdAt&_order=desc",
+  
+  "/api/deliveries": "/deliveries",
+  "/api/deliveries/:id": "/deliveries/:id",
+  "/api/deliveries/top": "/deliveries?_sort=rating.average&_order=desc&_limit=5",
+  
+  "/api/menu/:businessId": "/menu?businessId=:businessId",
+  "/api/menu/:businessId/top": "/menu?businessId=:businessId&isPopular=true",
+  "/api/menu": "/menu",
+  "/api/menu/:id": "/menu/:id",
+  
+  "/api/users": "/users",
+  "/api/users/:id": "/users/:id",
+  "/api/users/me": "/users/1",
+  "/api/users/:id/reviews": "/reviews?userId=:id",
+  
+  "/api/auth/register": "/users",
+  "/api/auth/login": "/users/1",
+  "/api/auth/logout": "/users/1",
+  
+  "/api/applications": "/applications",
+  "/api/applications/:id": "/applications/:id",
+  "/api/applications/:id/approve": "/applications/:id",
+  "/api/applications/:id/reject": "/applications/:id"
+}

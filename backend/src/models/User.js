@@ -16,12 +16,12 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
     avatar: {
-      tpe: String,
+      type: String,
       default: null,
     },
 
     //university info
-    univeristy: {
+    university: {
       type: String,
       default: "AAU",
     },
@@ -31,11 +31,23 @@ const userSchema = new mongoose.Schema(
     yearOfStudy: {
       type: String,
     },
+    description: {
+      type: String,
+      default: "",
+    },
+    followers:{
+      type: String,
+      default: "",
+    },
+    following:{
+      type: String,
+      default: "",
+    },
 
     //roles and status
     role: {
       type: String,
-      enum: ["user", "admin", "business_owner"],
+      enum: ["user", "admin", "business_owner", "super_admin"],
       default: "user",
     },
 
@@ -76,7 +88,6 @@ userSchema.virtual("reviewCount", {
   count: true,
 });
 
-userSchema.index({ email: 1 });
 userSchema.index({ university: 1, dormitory: 1 });
 
 export const User = mongoose.model("User", userSchema);

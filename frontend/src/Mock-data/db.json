@@ -1,0 +1,340 @@
+{
+  "businesses": [
+    {
+      "id": "b1",
+      "name": "DESTA CAFE",
+      "slug": "desta-cafe",
+      "category": "on-campus",
+      "description": "Great coffee and sandwiches! Student favorite spot.",
+      "isFeatured": false,
+      "rating": {
+        "average": 4.5,
+        "count": 42
+      },
+      "location": {
+        "address": "5K Campus, Building A",
+        "coordinates": {
+          "lat": 9.03,
+          "lng": 38.75
+        }
+      },
+      "image": [
+        {
+          "url": "./images/featured-1.png",
+          "isPrimary": true
+        }
+      ],
+      "hours": {
+        "openTime": "07:00 AM",
+        "closeTime": "09:00 PM"
+      }
+    },
+    {
+      "id": "b2",
+      "name": "123FASTFOOD",
+      "slug": "123fastfood",
+      "category": "delivery",
+      "description": "Fast delivery and tasty burgers. Open late for students.",
+      "isFeatured": true,
+      "rating": {
+        "average": 4.2,
+        "count": 31
+      },
+      "location": {
+        "address": "Near 6K Gate",
+        "coordinates": {
+          "lat": 9.04,
+          "lng": 38.76
+        }
+      },
+      "image": [
+        {
+          "url": "./images/featured-2.png",
+          "isPrimary": true
+        }
+      ],
+      "hours": {
+        "openTime": "10:00 AM",
+        "closeTime": "11:00 PM"
+      }
+    },
+    {
+      "id": "b3",
+      "name": "CHRISTINA CAFE",
+      "slug": "christina-cafe",
+      "category": "on-campus",
+      "description": "Best traditional Ethiopian food on campus.",
+      "isFeatured": true,
+      "rating": {
+        "average": 4.8,
+        "count": 56
+      },
+      "location": {
+        "address": "4K Student Center",
+        "coordinates": {
+          "lat": 9.02,
+          "lng": 38.74
+        }
+      },
+      "image": [
+        {
+          "url": "./images/featured-3.png",
+          "isPrimary": true
+        }
+      ],
+      "hours": {
+        "openTime": "08:00 AM",
+        "closeTime": "08:00 PM"
+      }
+    },
+    {
+      "id": "b4",
+      "name": "SLEEK DELIVERY",
+      "slug": "sleek-delivery",
+      "category": "delivery",
+      "description": "Reliable delivery service for all campuses.",
+      "isFeatured": true,
+      "rating": {
+        "average": 4.3,
+        "count": 28
+      },
+      "location": {
+        "address": "Multiple campuses",
+        "coordinates": {
+          "lat": 9.03,
+          "lng": 38.76
+        }
+      },
+      "image": [
+        {
+          "url": "./images/featured-4.png",
+          "isPrimary": true
+        }
+      ],
+      "hours": {
+        "openTime": "09:00 AM",
+        "closeTime": "10:00 PM"
+      }
+    },
+    {
+      "id": "b5",
+      "name": "MILLENNIUM CAFE",
+      "slug": "millennium-cafe",
+      "category": "off-campus",
+      "description": "Perfect for quick lunches between classes.",
+      "isFeatured": true,
+      "rating": {
+        "average": 4,
+        "count": 19
+      },
+      "location": {
+        "address": "Across from 5K Main Gate",
+        "coordinates": {
+          "lat": 9.03,
+          "lng": 38.77
+        }
+      },
+      "image": [
+        {
+          "url": "./images/featured-5.png",
+          "isPrimary": true
+        }
+      ],
+      "hours": {
+        "openTime": "07:30 AM",
+        "closeTime": "07:00 PM"
+      }
+    },
+    {
+      "id": "b6",
+      "name": "RED SEA RESTAURANT",
+      "slug": "red-sea-restaurant",
+      "category": "off-campus",
+      "description": "Friendly staff and great prices. Popular for groups.",
+      "isFeatured": true,
+      "rating": {
+        "average": 4.6,
+        "count": 47
+      },
+      "location": {
+        "address": "Saris Area",
+        "coordinates": {
+          "lat": 9.05,
+          "lng": 38.78
+        }
+      },
+      "image": [
+        {
+          "url": "./images/featured-1.png",
+          "isPrimary": true
+        }
+      ],
+      "hours": {
+        "openTime": "11:00 AM",
+        "closeTime": "10:00 PM"
+      }
+    }
+  ],
+  "reviews": [
+    {
+      "id": "r1",
+      "businessId": "b1",
+      "userId": "u1",
+      "rating": 4.5,
+      "body": "I ORDERED FROM HERE LAST WEEK - GOT MY ORDER IN 10 MINUTES! SUPER FAST AND FRIENDLY SERVICE.",
+      "helpfulCount": 12,
+      "isApproved": true,
+      "createdAt": "2024-12-15T10:30:00Z"
+    },
+    {
+      "id": "r2",
+      "businessId": "b2",
+      "userId": "u2",
+      "rating": 4.8,
+      "body": "Best burgers on campus! Always fresh and hot. Perfect for late night studying.",
+      "helpfulCount": 8,
+      "isApproved": true,
+      "createdAt": "2024-12-14T14:20:00Z"
+    },
+    {
+      "id": "r3",
+      "businessId": "b3",
+      "userId": "u3",
+      "rating": 5,
+      "body": "Authentic Ethiopian food at reasonable prices. Their beyaynetu is amazing!",
+      "helpfulCount": 15,
+      "isApproved": true,
+      "createdAt": "2024-12-13T12:15:00Z"
+    },
+    {
+      "id": "r4",
+      "businessId": "b4",
+      "userId": "u4",
+      "rating": 4.3,
+      "body": "Always delivers on time, even during rush hours. Very reliable service.",
+      "helpfulCount": 5,
+      "isApproved": true,
+      "createdAt": "2024-12-12T18:45:00Z"
+    },
+    {
+      "id": "r5",
+      "businessId": "b1",
+      "userId": "u5",
+      "rating": 4.2,
+      "body": "Good coffee but sometimes too crowded during lunch hours.",
+      "helpfulCount": 3,
+      "isApproved": true,
+      "createdAt": "2024-12-11T11:20:00Z"
+    },
+    {
+      "id": "r6",
+      "businessId": "b5",
+      "userId": "u6",
+      "rating": 4,
+      "body": "Quick service and decent food. Perfect for between classes.",
+      "helpfulCount": 2,
+      "isApproved": true,
+      "createdAt": "2024-12-10T13:10:00Z"
+    }
+  ],
+  "users": [
+    {
+      "id": "u1",
+      "email": "student1@aau.edu.et",
+      "name": "Anna",
+      "avatar": "https://i.pravatar.cc/150?img=1",
+      "role": "user",
+      "university": "AAU",
+      "dormitory": "5K",
+      "yearOfStudy": "2nd Year"
+    },
+    {
+      "id": "u2",
+      "email": "student2@aau.edu.et",
+      "name": "Mike",
+      "avatar": "https://i.pravatar.cc/150?img=2",
+      "role": "user",
+      "university": "AAU",
+      "dormitory": "6K",
+      "yearOfStudy": "3rd Year"
+    },
+    {
+      "id": "u3",
+      "email": "student3@aau.edu.et",
+      "name": "Sara",
+      "avatar": "https://i.pravatar.cc/150?img=3",
+      "role": "user",
+      "university": "AAU",
+      "dormitory": "4K",
+      "yearOfStudy": "1st Year"
+    }
+  ],
+  "deliveries": [
+    {
+      "id": "d1",
+      "name": "Campus Express Delivery",
+      "description": "Fast and reliable delivery service for AAU students",
+      "servicedAreas": [
+        "5k",
+        "6k",
+        "4k"
+      ],
+      "deliverySpeed": "fast",
+      "averageDeliveryTime": 25,
+      "deliveryFee": {
+        "min": 15,
+        "max": 30
+      },
+      "rating": {
+        "average": 4.5,
+        "count": 89
+      }
+    }
+  ],
+  "menu": [
+    {
+      "id": "m1",
+      "businessId": "b1",
+      "itemName": "Special Coffee",
+      "description": "Traditional Ethiopian coffee with popcorn",
+      "price": 35,
+      "currency": "ETB",
+      "category": "drinks",
+      "isPopular": true,
+      "isAvailable": true
+    }
+  ],
+  "applications": [
+    {
+      "id": "a1",
+      "businessName": "Yeshi's Coffee House",
+      "location": "Near 5k Campus Gate",
+      "description": "Traditional Ethiopian coffee and snacks",
+      "status": "pending"
+    },
+    {
+      "id": "e953",
+      "businessName": "kokak",
+      "location": "jand",
+      "description": "andn",
+      "date": "2026-01-20T12:34:06.089Z",
+      "status": "pending"
+    },
+    {
+      "id": "5d62",
+      "businessName": "jkandjk",
+      "location": "ajaja",
+      "description": "janaj",
+      "date": "2026-01-20T12:40:47.640Z",
+      "status": "pending"
+    },
+    {
+      "id": "a83a",
+      "businessName": "adfa",
+      "location": "fasd",
+      "description": "",
+      "date": "2026-01-26T18:24:53.443Z",
+      "status": "pending"
+    }
+  ]
+}

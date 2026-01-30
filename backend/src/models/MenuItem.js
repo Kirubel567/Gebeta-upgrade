@@ -11,6 +11,8 @@ const menuItemSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
+      lowercase: true,
+      trim: true,
     },
     description: {
       type: String,
@@ -27,9 +29,13 @@ const menuItemSchema = new mongoose.Schema(
     category: {
       type: String, //main, breakfast, fasting...
     },
-    image: {
-      type: String,
-    },
+    images: [
+      {
+        url: { type: String, required: true },
+        alt: { type: String },
+        isPrimary: { type: Boolean, default: false },
+      },
+    ],
 
     rating: {
       average: {
@@ -53,10 +59,12 @@ const menuItemSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
-menuItemsSchema.index({ business: 1, category: 1 });
-menuItemsSchema.index({ business: 1, isPopular: -1 });
+menuItemSchema.index({ business: 1, category: 1 });
+menuItemSchema.index({ business: 1, isPopular: -1 });
+
+menuItemSchema.index({ name: 1, business: 1 }, { unique: true });
 
 export const MenuItem = mongoose.model("MenuItem", menuItemSchema);
