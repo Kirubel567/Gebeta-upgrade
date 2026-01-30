@@ -3,7 +3,35 @@ import { applyMiddleware, asyncHandler } from "../../lib/middleware.js";
 import { authMiddleware, authorize } from "../../middleware/authMiddleware.js";
 export const registerApplicationRoutes = (app) => {
   //public routes
-  app.post("/api/applications", asyncHandler(AppController.submitApplication));
+  // (none now, simplified)
+
+  //protected user routes
+  // Submit Application
+  app.post(
+    "/api/applications",
+    applyMiddleware(
+      authMiddleware,
+      asyncHandler(AppController.submitApplication)
+    )
+  );
+
+  // Get My Applications
+  app.get(
+    "/api/applications/my-applications",
+    applyMiddleware(
+      authMiddleware,
+      asyncHandler(AppController.getMyApplications)
+    )
+  );
+
+  // Update Application
+  app.put(
+    "/api/applications/:id",
+    applyMiddleware(
+      authMiddleware,
+      asyncHandler(AppController.updateApplication)
+    )
+  );
 
   //admin only routes
   app.get(

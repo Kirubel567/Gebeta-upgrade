@@ -1,6 +1,6 @@
 import { ApiError } from "../utils/errorHandler.js";
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "";
 
 export const apiClient = async (endpoint, options = {}) => {
     const token = localStorage.getItem('gebeta_token');
@@ -11,10 +11,14 @@ export const apiClient = async (endpoint, options = {}) => {
     const config = {
         ...options,
         headers: {
-            'Content-Type': 'application/json',
             ...options.headers,
         },
     };
+
+    // Only set Content-Type if not FormData (browser will set it automatically for FormData)
+    if (!(options.body instanceof FormData)) {
+        config.headers['Content-Type'] = 'application/json';
+    }
 
     if (token) {
         config.headers['Authorization'] = `Bearer ${token}`;
@@ -22,7 +26,7 @@ export const apiClient = async (endpoint, options = {}) => {
 
     try {
         const response = await fetch(`${BACKEND_URL}${cleanEndpoint}`, config);
-        
+
         // Always attempt to parse JSON to get backend error details
         const data = await response.json().catch(() => ({}));
 
@@ -30,7 +34,7 @@ export const apiClient = async (endpoint, options = {}) => {
         if (response.status === 401) {
             localStorage.removeItem('gebeta_token');
             localStorage.removeItem('gebeta_user');
-            
+
             if (!window.location.pathname.includes('/login')) {
                 window.location.href = '/login';
             }
@@ -50,7 +54,7 @@ export const apiClient = async (endpoint, options = {}) => {
         return data;
     } catch (error) {
         if (error instanceof ApiError) throw error;
-        
+
         // Handle cases where the server is down (Network Error)
         throw new ApiError(0, 'Network error. Please check if the Gebeta backend is running on port 5000.');
     }

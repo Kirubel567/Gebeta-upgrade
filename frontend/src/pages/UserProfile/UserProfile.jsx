@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import Button from '../../components/Button/Button';
 import './UserProfile.css';
 import { businessService, reviewService, authService } from '../../api/apiService';
+import { formatRole } from '../../utils/roleUtils';
 
 const UserProfile = () => {
   const [user, setUser] = useState(null);
@@ -661,7 +662,7 @@ const UserProfile = () => {
                       <i className="fa-solid fa-user-group"></i>
                       ROLE:
                     </div>
-                    <div className="stat-value">{user.role || 'user'}</div>
+                    <div className="stat-value">{formatRole(user.role || 'user')}</div>
                   </div>
                   <div className="stat-line">
                     <div className="stat-label">

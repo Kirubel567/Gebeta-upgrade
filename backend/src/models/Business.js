@@ -80,6 +80,7 @@ const BusinessSchema = new mongoose.Schema(
       },
     },
     isFeatured: { type: Boolean, default: false },
+    isApproved: { type: Boolean, default: false },
     owner: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
