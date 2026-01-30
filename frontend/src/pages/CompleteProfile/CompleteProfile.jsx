@@ -357,7 +357,7 @@ const CompleteProfile = () => {
                   <div className="textarea-wrapper">
                     <textarea
                       className={`form-textarea hide-textarea-scrollbar ${errors.description ? 'error' : ''}`}
-                      placeholder="Example: I'm a Computer Science student at AAU Main Campus, love trying new food spots around 6kilo, and always looking for good coffee places on campus..."
+                      placeholder="Example: I'm a Computer Science student at AAU CNCS Campus, love trying new food spots around 4kilo, and always looking for good coffee places on campus..."
                       name="description"
                       value={formData.description}
                       onChange={handleChange}

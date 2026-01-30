@@ -18,7 +18,7 @@
 
 /* Left Hero Section */
 .profile-hero {
-  flex: 4; 
+  flex: 3; 
   display: none;
   width: 100%;
   height: 100vh;
@@ -146,31 +146,15 @@
   align-items: flex-start;
   justify-content: center;
   padding: 3rem 1rem 2rem 1rem;
-  overflow: auto;
-  scrollbar-width: none; 
+  overflow-y: auto;
+  scrollbar-width: none;   
   -ms-overflow-style: none; 
   max-height: 100vh;
   min-height: 100vh;
 }
 
 .profile-form-side::-webkit-scrollbar {
-  display: none; 
-}
-.profile-form-container {
-  overflow: visible;
-}
-
-@media (min-width: 768px) {
-  .profile-form-side {
-    padding: 4rem 2rem 3rem 2rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .profile-form-side {
-    padding: 5rem 4rem 4rem 4rem;
-    align-items: center;
-  }
+  display: none;
 }
 
 .profile-form-container {
@@ -179,6 +163,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow: visible;
 }
 
 /* Header */
@@ -353,6 +338,8 @@
   color: white;
   font-size: 1rem;
   appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
   cursor: pointer;
   transition: all 0.2s;
 }
@@ -416,6 +403,7 @@
   transition: all 0.2s;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  overflow: auto;
 }
 
 .form-textarea::-webkit-scrollbar {

@@ -179,12 +179,7 @@ const Register = () => {
         {/* Right Side: Registration Form */}
         <div className="register-form-side">
           <div className="register-form-container">
-            {/* Main Header */}
-            <div className="form-main-header">
-              <h1 className="main-title">Create Account</h1>
-              <p className="main-subtitle">Join Gebeta and explore the best campus food spots!</p>
-            </div>
-
+        
             {/* Logo */}
             <div className="register-logo">
               <Link to="/" className="logo-link">
