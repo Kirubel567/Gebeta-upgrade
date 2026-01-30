@@ -174,7 +174,7 @@ const About = () => {
               <div className="create-btn-container">
                 {!isCreating && (
                   <Button variant="primary" onClick={handleCreateClick}>
-                    <i className="fa-solid fa-plus"></i> Create New Business
+                    <i className="fa-solid fa-plus" style={{ width: '16px' }}></i> Create New Business
                   </Button>
                 )}
               </div>
@@ -197,7 +197,7 @@ const About = () => {
             <div className="business-grid">
               {applications.length === 0 && !isCreating ? (
                 <div className="empty-state">
-                  <i className="fa-solid fa-clipboard-list"></i>
+                  <i className="fa-solid fa-clipboard-list" style={{ width: '16px' }}></i>
                   <h3>No Applications Yet</h3>
                   <p>You haven't submitted any applications yet. Click the button above to start!</p>
                 </div>
@@ -228,7 +228,7 @@ const About = () => {
                             />
                           ) : (
                             <div style={{ width: '100%', height: '100%', background: '#333', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                              <i className="fa-solid fa-image" style={{ fontSize: '2rem', color: '#666' }}></i>
+                              <i className="fa-solid fa-image" style={{ fontSize: '2rem', color: '#666', width: '16px' }}></i>
                             </div>
                           )}
 
@@ -242,15 +242,15 @@ const About = () => {
                         <div className="card-content">
                           <h3 className="card-title">{businessData.name}</h3>
 
-                          <div className="card-header-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                            <p className="card-category" style={{ margin: 0 }}>
-                              <i className="fa-solid fa-tag"></i>
+                          <div className="card-header-row">
+                            <p className="card-category">
+                              <i className="fa-solid fa-tag" style={{ width: '16px' }}></i>
                               {businessData.category || 'Uncategorized'}
                             </p>
 
                             {isLive && (
-                              <div className="card-rating" style={{ display: 'flex', alignItems: 'center', gap: '5px', color: '#ffd700', fontWeight: 'bold', fontSize: '0.9rem' }}>
-                                <i className="fa-solid fa-star"></i>
+                              <div className="card-rating">
+                                <i className="fa-solid fa-star" style={{ width: '16px' }}></i>
                                 <span>{businessData.rating?.average?.toFixed(1) || '0.0'}</span>
                               </div>
                             )}
@@ -260,15 +260,15 @@ const About = () => {
 
                           {/* Rejection Notes */}
                           {app.status === 'rejected' && app.reviewNotes && (
-                            <div className="rejection-notice" style={{ marginTop: '10px', padding: '10px', background: 'rgba(255,0,0,0.1)', borderLeft: '3px solid red', fontSize: '0.9rem' }}>
+                            <div className="rejection-notice">
                               <strong>Admin Note:</strong> {app.reviewNotes}
                             </div>
                           )}
 
                           <div className="card-meta">
                             <div className="meta-item">
-                              <i className="fa-solid fa-location-dot"></i>
-                              <span>{typeof businessData.location === 'object' ? businessData.location.address : businessData.location}</span>
+                              <i className="fa-solid fa-location-dot" style={{ width: '16px' }}></i>
+                              <span>{typeof businessData.location === 'object' ? businessData.location.address || 'AAU Campus' : businessData.location}</span>
                             </div>
                           </div>
                         </div>
@@ -279,7 +279,7 @@ const About = () => {
                             className="action-btn edit-btn"
                             onClick={() => setEditingItem(isEditingThis ? null : { id: displayId, type: cardType })}
                           >
-                            <i className="fa-solid fa-pen-to-square"></i>
+                            <i className="fa-solid fa-pen-to-square" style={{ width: '16px' }}></i>
                             {isEditingThis ? 'Close' : (app.status === 'rejected' ? 'Fix & Resubmit' : 'Update')}
                           </button>
 
@@ -289,7 +289,7 @@ const About = () => {
                               className="action-btn delete-btn"
                               onClick={() => handleDelete(displayId, businessData.name, cardType)}
                             >
-                              <i className="fa-solid fa-trash"></i>
+                              <i className="fa-solid fa-trash" style={{ width: '16px' }}></i>
                               Delete
                             </button>
                           )}
