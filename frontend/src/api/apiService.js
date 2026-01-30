@@ -109,7 +109,7 @@ export const menuService = {
         return apiClient(`/api/menu/${businessId}/top`, { method: 'GET' });
     },
 
-    // Admin only
+    // Business owner only of its own menu of its business
     create: async (data) => {
         return apiClient('/api/menu', {
             method: 'POST',

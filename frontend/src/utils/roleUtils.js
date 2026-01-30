@@ -1,12 +1,8 @@
-/**
- * Utility functions for formatting and mapping user roles
- */
+// Utility functions for formatting and mapping user roles
 
-/**
- * Maps backend role values to user-friendly display strings
- * @param {string} role - The role from the backend (e.g., 'business_owner', 'admin', 'user')
- * @returns {string} - Formatted role string for display
- */
+
+// Maps backend role values to user-friendly display strings
+
 export const formatRole = (role) => {
     const roleMap = {
         business_owner: 'Business Owner',
@@ -19,11 +15,7 @@ export const formatRole = (role) => {
     return roleMap[role] || role.charAt(0).toUpperCase() + role.slice(1);
 };
 
-/**
- * Gets the CSS class for role badge styling
- * @param {string} role - The role from the backend
- * @returns {string} - CSS class name for the role badge
- */
+// Gets the CSS class for role badge styling
 export const getRoleBadgeClass = (role) => {
     const classMap = {
         business_owner: 'role-business-owner',
@@ -36,12 +28,7 @@ export const getRoleBadgeClass = (role) => {
     return classMap[role] || 'role-default';
 };
 
-/**
- * Checks if a role has specific permissions
- * @param {string} role - The role to check
- * @param {string} permission - The permission to check for
- * @returns {boolean} - Whether the role has the permission
- */
+// Checks if a role has specific permissions
 export const hasPermission = (role, permission) => {
     const permissions = {
         super_admin: ['all'],

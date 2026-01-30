@@ -4,7 +4,9 @@ import {
   businessService,
   menuService,
   reviewService,
+  authService,
 } from "../../api/apiService"; // NEW: API Services
+import MenuFormModal from "../../components/MenuFormModal/MenuFormModal"; // NEW: Menu Modal
 import { handleApiError } from "../../utils/errorHandler"; // NEW: Error Handler
 import "./CustomerReview.css";
 
@@ -19,6 +21,98 @@ const CustomerReview = () => {
   const [expandedReviews, setExpandedReviews] = useState({});
   const [showAllReviews, setShowAllReviews] = useState(false);
   const [error, setError] = useState(null); // NEW: Error state
+
+  // Menu Management State
+  const [currentUser, setCurrentUser] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingItem, setEditingItem] = useState(null);
+
+  useEffect(() => {
+    // Fetch current user for permission checks
+    const fetchUser = async () => {
+      try {
+        const res = await authService.getProfile();
+        if (res.data) setCurrentUser(res.data);
+      } catch (err) {
+        // User not logged in, ignore
+      }
+    };
+    fetchUser();
+  }, []);
+
+  const isOwner = currentUser && business &&
+    (currentUser.role === 'business_owner' || currentUser.role === 'admin') &&
+    (business.owner === currentUser._id || business.owner?._id === currentUser._id);
+
+  const handleOpenCreateModal = () => {
+    setEditingItem(null);
+    setIsModalOpen(true);
+  };
+
+  const handleOpenEditModal = (item, e) => {
+    e.stopPropagation(); // Prevent card click
+    setEditingItem(item);
+    setIsModalOpen(true);
+  };
+
+  const handleDeleteMenu = async (itemId, e) => {
+    e.stopPropagation();
+    if (window.confirm("Are you sure you want to delete this menu item?")) {
+      try {
+        await menuService.delete(itemId);
+        // Refresh items (optimistic or re-fetch). Let's filter out.
+        setMenuItems(prev => prev.filter(i => i._id !== itemId));
+      } catch (err) {
+        console.error("Failed to delete", err);
+        alert("Failed to delete item");
+      }
+    }
+  };
+
+  const handleModalSubmit = async (formData) => {
+    try {
+      // Format payload for backend (matching Schema: images array)
+      const imagePayload = formData.image ? [{
+        url: formData.image,
+        isPrimary: true
+      }] : [];
+
+      const payload = {
+        ...formData,
+        business: business._id,
+        images: imagePayload.length > 0 ? imagePayload : undefined
+      };
+
+      // Remove raw 'image' field if it exists (schema doesn't use it, but our form does)
+      delete payload.image;
+
+      if (editingItem) {
+        // Update
+        const res = await menuService.update(editingItem._id, payload);
+        if (res.success) {
+          // Update local state
+          const updatedItem = {
+            ...res.data,
+            image: res.data.images?.find(i => i.isPrimary)?.url || res.data.images?.[0]?.url || ""
+          };
+          setMenuItems(prev => prev.map(i => i._id === updatedItem._id ? updatedItem : i));
+        }
+      } else {
+        // Create
+        const res = await menuService.create(payload);
+        if (res.success) {
+          const newItem = {
+            ...res.data,
+            image: res.data.images?.find(i => i.isPrimary)?.url || res.data.images?.[0]?.url || ""
+          };
+          setMenuItems(prev => [newItem, ...prev]);
+        }
+      }
+    } catch (err) {
+      console.error("Error saving menu item:", err);
+      alert("Failed to save menu item");
+    }
+  };
 
   // ============================================================
   // ORIGINAL CODE - COMMENTED OUT FOR REFERENCE
@@ -251,7 +345,14 @@ const CustomerReview = () => {
 
       {/* Menu Section */}
       <section className="container" style={{ padding: "40px 20px" }}>
-        <h2 className="section-title">MENU</h2>
+        <div className="menu-header-row">
+          <h2 className="section-title" style={{ marginBottom: 0 }}>MENU</h2>
+          {isOwner && (
+            <button className="add-menu-btn" onClick={handleOpenCreateModal}>
+              <i className="fa-solid fa-plus"></i> Add Menu Item
+            </button>
+          )}
+        </div>
         <h3 style={{ fontFamily: "var(--font-heading)", marginBottom: "20px" }}>
           TOP ITEMS
         </h3>
@@ -263,6 +364,27 @@ const CustomerReview = () => {
               className="menu-card clickable-menu-item"
               onClick={() => handleMenuItemClick(item)}
             >
+              {isOwner && (
+                <div className="menu-admin-actions">
+                  <button className="action-btn edit-btn" onClick={(e) => handleOpenEditModal(item, e)} title="Edit">
+                    <i className="fa-solid fa-pen"></i>
+                  </button>
+                  <button className="action-btn delete-btn" onClick={(e) => handleDeleteMenu(item._id, e)} title="Delete">
+                    <i className="fa-solid fa-trash"></i>
+                  </button>
+                </div>
+              )}
+
+              {!item.isAvailable && (
+                <div className="sold-out-overlay">
+                  Sold Out
+                </div>
+              )}
+
+              {(item.rating?.average > 3 || item.isPopular) && (
+                <div className="menu-badge popular-badge">Popular</div>
+              )}
+
               <div className="menu-image-wrapper">
                 <img src={item.image} alt={item.name} />
                 <div className="menu-price-tag">
@@ -348,6 +470,13 @@ const CustomerReview = () => {
           )}
         </div>
       </section>
+      <MenuFormModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleModalSubmit}
+        initialData={editingItem}
+        isEditing={!!editingItem}
+      />
     </main>
   );
 };

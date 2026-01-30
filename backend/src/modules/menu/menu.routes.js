@@ -12,16 +12,16 @@ export const registerMenuRoutes = (app) => {
   //protected routes
   app.post("/api/menu", applyMiddleware(
     authMiddleware,
-    authorize("admin"),
+    authorize("admin", "business_owner"),
     asyncHandler(MenuController.createMenuItem)));
 
   app.put("/api/menu/:id", applyMiddleware(
     authMiddleware,
-    authorize("admin"),
+    authorize("admin", "business_owner"),
     asyncHandler(MenuController.updateMenuItem)));
 
   app.delete("/api/menu/:id", applyMiddleware(
     authMiddleware,
-    authorize("admin"),
+    authorize("admin", "business_owner"),
     asyncHandler(MenuController.deleteMenuItem)));
 };

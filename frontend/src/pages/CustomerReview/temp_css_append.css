@@ -1,0 +1,117 @@
+/* ... (Existing CSS) */
+
+/* NEW: Menu Management Styles */
+
+.menu-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.add-menu-btn {
+    background-color: var(--accent-green);
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.2s;
+}
+
+.add-menu-btn:hover {
+    background-color: #2eb00b;
+}
+
+/* Badges */
+.menu-badge {
+    position: absolute;
+    top: 10px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    z-index: 2;
+    text-transform: uppercase;
+}
+
+.popular-badge {
+    right: 10px;
+    background-color: #ff9f43;
+    /* Orange/Gold */
+    color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.sold-out-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 5;
+    color: white;
+    font-weight: bold;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    border-radius: 10px 10px 0 0;
+    /* Match card radius if needed */
+    pointer-events: none;
+    /* Let clicks pass through if we want, but usually better to block */
+}
+
+/* Admin Actions on Menu Card */
+.menu-admin-actions {
+    display: none;
+    /* Hidden by default, shown on hover if owner */
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    gap: 5px;
+    z-index: 10;
+}
+
+.menu-card:hover .menu-admin-actions {
+    display: flex;
+}
+
+.action-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: white;
+    font-size: 0.9rem;
+    transition: transform 0.2s;
+}
+
+.edit-btn {
+    background-color: #3498db;
+    /* Blue */
+}
+
+.delete-btn {
+    background-color: #e74c3c;
+    /* Red */
+}
+
+.action-btn:hover {
+    transform: scale(1.1);
+}
+
+/* Ensure menu card handles relative positioning for overlays */
+.menu-card {
+    position: relative;
+}
