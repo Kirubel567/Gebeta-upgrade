@@ -22,12 +22,9 @@ import MenuItemDetail from './pages/MenuItemDetail/MenuItemDetail';
 import UserProfile from './pages/UserProfile/UserProfile';
 import Register from './pages/Register/Register';
 import CompleteProfile from './pages/CompleteProfile/CompleteProfile';
-import Register from './pages/Register/Register';
-import CompleteProfile from './pages/CompleteProfile/CompleteProfile';
 import ChatWidget from './components/ChatWidget/ChatWidget';
-import ReviewsDelivery from './pages/ReviewsDelivery/ReviewsDelivery';
-import SubmitReviews from './pages/SubmitReviews/SubmitReviews';
-import NotFound from './pages/NotFound/NotFound';
+// import ReviewsDelivery from './pages/ReviewsDelivery/ReviewsDelivery';
+// import NotFound from './pages/NotFound/NotFound';
 
 // Import global styles
 import './styles/globals.css';
@@ -40,12 +37,7 @@ function Layout() {
     location.pathname.startsWith('/login/') ||
     location.pathname === '/register' ||
     location.pathname === '/completeprofile';
-  // Hide header and footer on login, register, and completeprofile pages
-  const hideHeaderFooter = 
-    location.pathname === '/login' || 
-    location.pathname.startsWith('/login/') ||
-    location.pathname === '/register' ||
-    location.pathname === '/completeprofile';
+  
 
   return (
     <div className="app">
@@ -75,7 +67,7 @@ function Layout() {
           <Route path="/register" element={<Register />} />
           <Route path="/completeprofile" element={<CompleteProfile />} />
           {/* 404 - Not Found */}
-          <Route path="*" element={<NotFound />} />
+          {/* <Route path="*" element={<NotFound />} /> */}
           </Routes>
         
       </main>
