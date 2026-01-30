@@ -85,6 +85,10 @@ export const businessService = {
 // ==========================================
 
 export const menuService = {
+    getById: async (id) => {
+        return apiClient(`/api/menu/item/${id}`, { method: 'GET' });
+    },
+    
     getByBusinessId: async (businessId) => {
         return apiClient(`/api/menu/${businessId}`, { method: 'GET' });
     },
