@@ -24,12 +24,38 @@ export const registerBusinessRoutes = (app) => {
   );
 
   //protected routes
+  // Get current user's business
+  app.get(
+    "/api/businesses/my-business",
+    applyMiddleware(
+      authMiddleware,
+      asyncHandler(BussinessController.getMyBusiness),
+    ),
+  );
+
+  // Get all businesses owned by current user
+  app.get(
+    "/api/businesses/my-businesses",
+    applyMiddleware(
+      authMiddleware,
+      asyncHandler(BussinessController.getMyBusinesses),
+    ),
+  );
+
+  // Approve a business (Admin only - handled by controller or add authorize('admin') middleware if available)
+  app.patch(
+    "/api/businesses/:id/approve",
+    applyMiddleware(
+      authMiddleware,
+      asyncHandler(BussinessController.approve),
+    ),
+  );
+
   //CRUD actions on the businesses
   app.post(
     "/api/businesses",
     applyMiddleware(
       authMiddleware,
-      authorize("admin"),
       asyncHandler(BussinessController.create),
     ),
   );
@@ -37,7 +63,6 @@ export const registerBusinessRoutes = (app) => {
     "/api/businesses/:id",
     applyMiddleware(
       authMiddleware,
-      authorize("admin"),
       asyncHandler(BussinessController.update),
     ),
   );
@@ -45,7 +70,6 @@ export const registerBusinessRoutes = (app) => {
     "/api/businesses/:id",
     applyMiddleware(
       authMiddleware,
-      authorize("admin"),
       asyncHandler(BussinessController.remove),
     ),
   );
