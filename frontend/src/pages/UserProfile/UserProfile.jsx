@@ -188,81 +188,8 @@ const UserProfile = () => {
         // STAGE 4: Set Reviews State
         // ============================================
         if (enrichedReviews.length === 0) {
-          console.log('⚠️ [Stage 4] No reviews - using mock data for demonstration');
-          setRecentReviews([
-            {
-              id: 'mock-r1',
-              rating: 4.5,
-              body: 'I ORDERED FROM HERE LAST WEEK - GOT MY ORDER IN 10 MINUTES! SUPER FAST AND FRIENDLY SERVICE.',
-              createdAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
-              helpfulCount: 12,
-              business: {
-                name: 'DESTA CAFE',
-                category: 'on-campus',
-                location: '5K Campus, Building A',
-              },
-              food: {
-                name: 'Special Coffee',
-                price: 35,
-                currency: 'ETB',
-                image: foodImages['Special Coffee']
-              }
-            },
-            {
-              id: 'mock-r2',
-              rating: 4.8,
-              body: 'Best traditional Ethiopian food on campus! Authentic flavors and great prices.',
-              createdAt: new Date(Date.now() - 16 * 24 * 60 * 60 * 1000).toISOString(),
-              helpfulCount: 8,
-              business: {
-                name: 'CHRISTINA CAFE',
-                category: 'on-campus',
-                location: '4K Student Center',
-              },
-              food: {
-                name: 'BEYAYNETU',
-                price: 120,
-                currency: 'ETB',
-                image: foodImages['BEYAYNETU']
-              }
-            },
-            {
-              id: 'mock-r3',
-              rating: 4.2,
-              body: 'Good coffee but sometimes too crowded during lunch hours.',
-              createdAt: new Date(Date.now() - 19 * 24 * 60 * 60 * 1000).toISOString(),
-              helpfulCount: 3,
-              business: {
-                name: 'DESTA CAFE',
-                category: 'on-campus',
-                location: '5K Campus, Building A',
-              },
-              food: {
-                name: 'Club Sandwich',
-                price: 65,
-                currency: 'ETB',
-                image: foodImages['Club Sandwich']
-              }
-            },
-            {
-              id: 'mock-r4',
-              rating: 4.6,
-              body: 'Amazing pizza with fresh toppings! Perfect for group hangouts.',
-              createdAt: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString(),
-              helpfulCount: 15,
-              business: {
-                name: 'RED SEA RESTAURANT',
-                category: 'off-campus',
-                location: 'Saris Area',
-              },
-              food: {
-                name: 'PIZZA',
-                price: 150,
-                currency: 'ETB',
-                image: foodImages['PIZZA']
-              }
-            },
-          ]);
+          console.log('⚠️ [Stage 4] No reviews found.');
+          setRecentReviews([]);
         } else {
           console.log('✅ [Stage 4] Setting enriched reviews to state');
           setRecentReviews(enrichedReviews);
@@ -302,80 +229,7 @@ const UserProfile = () => {
         });
         setAvatarPreview(fallbackUser.avatar);
 
-        setRecentReviews([
-          {
-            id: 'fallback-r1',
-            rating: 4.5,
-            body: 'I ORDERED FROM HERE LAST WEEK - GOT MY ORDER IN 10 MINUTES! SUPER FAST AND FRIENDLY SERVICE.',
-            createdAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
-            helpfulCount: 12,
-            business: {
-              name: 'DESTA CAFE',
-              category: 'on-campus',
-              location: '5K Campus, Building A',
-            },
-            food: {
-              name: 'Special Coffee',
-              price: 35,
-              currency: 'ETB',
-              image: foodImages['Special Coffee']
-            }
-          },
-          {
-            id: 'fallback-r2',
-            rating: 4.8,
-            body: 'Best traditional Ethiopian food on campus! Authentic flavors and great prices.',
-            createdAt: new Date(Date.now() - 16 * 24 * 60 * 60 * 1000).toISOString(),
-            helpfulCount: 8,
-            business: {
-              name: 'CHRISTINA CAFE',
-              category: 'on-campus',
-              location: '4K Student Center',
-            },
-            food: {
-              name: 'BEYAYNETU',
-              price: 120,
-              currency: 'ETB',
-              image: foodImages['BEYAYNETU']
-            }
-          },
-          {
-            id: 'fallback-r3',
-            rating: 4.2,
-            body: 'Good coffee but sometimes too crowded during lunch hours.',
-            createdAt: new Date(Date.now() - 19 * 24 * 60 * 60 * 1000).toISOString(),
-            helpfulCount: 3,
-            business: {
-              name: 'DESTA CAFE',
-              category: 'on-campus',
-              location: '5K Campus, Building A',
-            },
-            food: {
-              name: 'Club Sandwich',
-              price: 65,
-              currency: 'ETB',
-              image: foodImages['Club Sandwich']
-            }
-          },
-          {
-            id: 'fallback-r4',
-            rating: 4.6,
-            body: 'Amazing pizza with fresh toppings! Perfect for group hangouts.',
-            createdAt: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString(),
-            helpfulCount: 15,
-            business: {
-              name: 'RED SEA RESTAURANT',
-              category: 'off-campus',
-              location: 'Saris Area',
-            },
-            food: {
-              name: 'PIZZA',
-              price: 150,
-              currency: 'ETB',
-              image: foodImages['PIZZA']
-            }
-          },
-        ]);
+        setRecentReviews([]);
 
         console.log('✅ [UserProfile] Fallback data loaded');
       } finally {
@@ -664,21 +518,8 @@ const UserProfile = () => {
                     </div>
                     <div className="stat-value">{formatRole(user.role || 'user')}</div>
                   </div>
-                  <div className="stat-line">
-                    <div className="stat-label">
-                      <i className="fa-solid fa-user-group"></i>
-                      FOLLOWERS:
-                    </div>
-                    <div className="stat-value">{user.followers || 0}</div>
-                  </div>
+                  {/* Followers/Following removed by request */}
 
-                  <div className="stat-line">
-                    <div className="stat-label">
-                      <i className="fa-solid fa-user-plus"></i>
-                      FOLLOWING:
-                    </div>
-                    <div className="stat-value">{user.following || 0}</div>
-                  </div>
                 </div>
 
                 {/* Edit Profile Button */}
