@@ -72,7 +72,7 @@ const SubmitReview = () => {
             name: bData.name,
             // Ensure first image url or fallback string
             image: bData.image?.[0]?.url || (typeof bData.image === 'string' ? bData.image : "") || "",
-            subtext: addressString || "Location N/A",
+            subtext: addressString || "AAU Campus",
             businessId: bData._id,
             menuItemId: null
           });
