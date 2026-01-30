@@ -24,7 +24,95 @@
     display: block;
   }
 }
+/* Progress Bar Styles for Register Page */
+.progress-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 2.5rem;
+  max-width: 400px;
+}
 
+.progress-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.step-number {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #2d3359;
+  color: #9ca3af;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+/* First step - active (green) */
+.progress-step.active .step-number {
+  background-color: var(--accent-green, #4CAF50);
+  color: white;
+  box-shadow: 0 0 15px rgba(76, 175, 80, 0.3);
+  border-color: var(--accent-green, #4CAF50);
+}
+
+/* Second step - inactive (gray) */
+.progress-step:not(.active) .step-number {
+  background-color: #9ca3af; /* This is the gray color you want */
+  color: #2d3359; /* Dark text for contrast */
+  border-color: #9ca3af;
+}
+
+.step-label {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.progress-step.active .step-label {
+  color: white;
+}
+
+.progress-line {
+  flex: 1;
+  height: 2px;
+  background-color: #2d3359;
+  margin: 0 1rem;
+  position: relative;
+  top: -20px;
+}
+
+.progress-line.active {
+  background-color: var(--accent-green, #4CAF50);
+}
+
+@media (max-width: 768px) {
+  .progress-bar {
+    max-width: 300px;
+  }
+  
+  .step-number {
+    width: 35px;
+    height: 35px;
+    font-size: 0.875rem;
+  }
+  
+  .progress-line {
+    margin: 0 0.5rem;
+  }
+}
 .hero-image {
   position: absolute;
   inset: 0;

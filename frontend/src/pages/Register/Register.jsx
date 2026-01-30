@@ -179,8 +179,7 @@ const Register = () => {
         {/* Right Side: Registration Form */}
         <div className="register-form-side">
           <div className="register-form-container">
-        
-            {/* Logo */}
+            {/* Header */}
             <div className="register-logo">
               <Link to="/" className="logo-link">
                 <h1 className="logo-text">Gebeta</h1>
@@ -188,10 +187,23 @@ const Register = () => {
               <p className="logo-subtitle">The Campus Food Guide</p>
             </div>
 
+            {/* Progress Bar */}
+            <div className="progress-bar">
+              <div className="progress-step active">
+                <div className="step-number">1</div>
+                <div className="step-label">Register</div>
+              </div>
+              <div className="progress-line"></div>
+              <div className="progress-step ">
+                <div className="step-number">2</div>
+                <div className="step-label">Complete Profile</div>
+              </div>
+            </div>
+
             {/* Form Card */}
             <div className="form-card">
               <div className="form-header">
-                <h2 className="form-title">Sign Up</h2>
+                <h2 className="form-title">Create Your Account</h2>
                 <p className="form-subtitle">Fill in your details to get started</p>
                 {errors.general && (
                   <div className="error-message" style={{ color: 'red', marginTop: '10px', textAlign: 'center' }}>
@@ -320,7 +332,7 @@ const Register = () => {
                   disabled={isSubmitting}
                   style={{ marginTop: '1rem' }}
                 >
-                  {isSubmitting ? 'Creating Account...' : 'Create Account'}
+                  {isSubmitting ? 'Creating Account...' : 'Sign Up'}
                 </Button>
               </form>
 

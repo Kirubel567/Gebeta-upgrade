@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import Button from '../../components/Button/Button';
 import './CompleteProfile.css';
@@ -6,6 +6,7 @@ import './CompleteProfile.css';
 const CompleteProfile = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const fileInputRef = useRef(null);
   
   // Get user data from registration
   const { email, name } = location.state || {};
@@ -17,6 +18,8 @@ const CompleteProfile = () => {
     description: '',
   });
   
+  const [profileImage, setProfileImage] = useState(null);
+  const [profileImagePreview, setProfileImagePreview] = useState('');
   const [dormitories, setDormitories] = useState([]);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -98,6 +101,46 @@ const CompleteProfile = () => {
     }
   };
 
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Check file type
+    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+    if (!validTypes.includes(file.type)) {
+      setErrors(prev => ({ ...prev, profileImage: 'Please upload a valid image (JPEG, PNG, GIF, WebP)' }));
+      return;
+    }
+
+    // Check file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setErrors(prev => ({ ...prev, profileImage: 'Image size should be less than 5MB' }));
+      return;
+    }
+
+    setProfileImage(file);
+    setErrors(prev => ({ ...prev, profileImage: '' }));
+
+    // Create preview URL
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setProfileImagePreview(reader.result);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleRemoveImage = () => {
+    setProfileImage(null);
+    setProfileImagePreview('');
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const triggerFileInput = () => {
+    fileInputRef.current.click();
+  };
+
   const validateForm = () => {
     const newErrors = {};
     
@@ -143,7 +186,7 @@ const CompleteProfile = () => {
       const campusName = formData.university.split(' - ')[0];
       
       // Prepare updated user data
-      const updatedUser = {
+      let updatedUser = {
         ...currentUser,
         university: 'AAU',
         campus: campusName,
@@ -152,6 +195,15 @@ const CompleteProfile = () => {
         bio: formData.description,
         profileCompleted: true
       };
+      
+      // If profile image uploaded, store it (in real app you'd upload to server)
+      if (profileImagePreview) {
+        updatedUser = {
+          ...updatedUser,
+          avatar: profileImagePreview,
+          hasCustomAvatar: true
+        };
+      }
       
       // Try to update via API first
       try {
@@ -241,7 +293,7 @@ const CompleteProfile = () => {
 
             {/* Progress Bar */}
             <div className="progress-bar">
-              <div className="progress-step active">
+              <div className="progress-step">
                 <div className="step-number">1</div>
                 <div className="step-label">Register</div>
               </div>
@@ -267,6 +319,77 @@ const CompleteProfile = () => {
               </div>
 
               <form className="profile-form" onSubmit={handleSubmit}>
+                {/* Profile Image Upload */}
+                <div className="form-section">
+                  <label className="form-label">
+                    <span className="label-text">Profile Picture</span>
+                    <span className="optional">(Optional)</span>
+                  </label>
+                  
+                  <div className="image-upload-container">
+                    <div className="image-preview-wrapper">
+                      <div 
+                        className={`image-preview ${profileImagePreview ? 'has-image' : ''}`}
+                        onClick={triggerFileInput}
+                      >
+                        {profileImagePreview ? (
+                          <img 
+                            src={profileImagePreview} 
+                            alt="Profile preview" 
+                            className="preview-image"
+                          />
+                        ) : (
+                          <div className="upload-placeholder">
+                            <svg className="upload-icon" viewBox="0 0 24 24">
+                              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z" />
+                            </svg>
+                            <span className="upload-text">Upload Photo</span>
+                          </div>
+                        )}
+                      </div>
+                      
+                      {profileImagePreview && (
+                        <button
+                          type="button"
+                          className="remove-image-btn"
+                          onClick={handleRemoveImage}
+                          aria-label="Remove image"
+                        >
+                          <svg className="remove-icon" viewBox="0 0 24 24">
+                            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+                          </svg>
+                        </button>
+                      )}
+                    </div>
+                    
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      onChange={handleImageUpload}
+                      accept=".jpg,.jpeg,.png,.gif,.webp"
+                      className="file-input"
+                      id="profileImage"
+                    />
+                    
+                    <div className="image-upload-info">
+                      <button
+                        type="button"
+                        className="upload-btn"
+                        onClick={triggerFileInput}
+                      >
+                        {profileImagePreview ? 'Change Photo' : 'Choose Photo'}
+                      </button>
+                      <p className="image-hint">
+                        JPG, PNG, GIF or WebP. Max 5MB
+                      </p>
+                    </div>
+                  </div>
+                  
+                  {errors.profileImage && (
+                    <span className="error-text">{errors.profileImage}</span>
+                  )}
+                </div>
+
                 {/* Campus Selection */}
                 <div className="form-section">
                   <label className="form-label">

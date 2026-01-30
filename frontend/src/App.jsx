@@ -22,37 +22,35 @@ import ChatWidget from './components/ChatWidget/ChatWidget';
 
 function Layout() {
   const location = useLocation();
-  // Hide header and footer on login page
-  const hideHeaderFooter = location.pathname === '/login' || location.pathname.startsWith('/login/');
+  // Hide header and footer on login, register, and completeprofile pages
+  const hideHeaderFooter = 
+    location.pathname === '/login' || 
+    location.pathname.startsWith('/login/') ||
+    location.pathname === '/register' ||
+    location.pathname === '/completeprofile';
 
   return (
     <div className="app">
       {!hideHeaderFooter && <Navbar />}
       <main>
-        
-          <Routes>
+        <Routes>
           {/** Public Routes */}
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
-
           <Route path="/about" element={<About />} />
-
-          {/** Protected Routes */}
-          <Route path="/delivery" element={<Delivery />} />
-          <Route path="/reviews" element={<Reviews />} />
-          <Route path="/customer-review/:id" element={<ProtectedRoute><CustomerReview /></ProtectedRoute>} />
-          <Route path="/submit-review" element={<ProtectedRoute><SubmitReview /></ProtectedRoute>} />
-          
-          <Route path="/menu-item" element={<MenuItemDetail />} />
-          <Route path="/profile" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
-          
           <Route path="/register" element={<Register />} />
           <Route path="/completeprofile" element={<CompleteProfile />} />
-          </Routes>
-        
+
+          {/** Protected Routes */}
+          <Route path="/delivery" element={<ProtectedRoute><Delivery /></ProtectedRoute>} />
+          <Route path="/reviews" element={<ProtectedRoute><Reviews /></ProtectedRoute>} />
+          <Route path="/customer-review/:id" element={<ProtectedRoute><CustomerReview /></ProtectedRoute>} />
+          <Route path="/submit-review" element={<ProtectedRoute><SubmitReview /></ProtectedRoute>} />
+          <Route path="/menu-item" element={<ProtectedRoute><MenuItemDetail /></ProtectedRoute>} />
+          <Route path="/profile" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
+        </Routes>
       </main>
       {!hideHeaderFooter && <Footer />}
-    
       {!hideHeaderFooter && <ChatWidget />}
     </div>
   );
